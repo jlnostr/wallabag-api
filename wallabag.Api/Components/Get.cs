@@ -9,6 +9,17 @@ namespace wallabag.Api
 {
     public partial class WallabagClient
     {
+        /// <summary>
+        /// Returns a list of items filtered by given parameters.
+        /// </summary>
+        /// <param name="IsRead">Indicates if the item is read (archived) or not.</param>
+        /// <param name="IsStarred">Indicates if the item is starred.</param>
+        /// <param name="DateOrder">Sort order, in which the items should be returned. Can be <see cref="WallabagDateOrder.ByCreationDate"/> or <see cref="WallabagDateOrder.ByLastModificationDate"/>.</param>
+        /// <param name="SortOrder">"Classic" sort order, ascending or descending.</param>
+        /// <param name="PageNumber">Number of page.</param>
+        /// <param name="ItemsPerPage">Number of items per page.</param>
+        /// <param name="Tags">An array of tags that applies to all items.</param>
+        /// <returns></returns>
         public async Task<IEnumerable<WallabagItem>> GetItemsAsync(
             bool? IsRead = null,
             bool? IsStarred = null,
@@ -50,6 +61,12 @@ namespace wallabag.Api
             var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, requestUriSubString);
             return (await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<ItemCollectionResponse>(jsonString))).Embedded.Items;
         }
+
+        /// <summary>
+        /// Returns an item by the given id.
+        /// </summary>
+        /// <param name="itemId">The item id.</param>
+        /// <returns><see cref="WallabagItem"/></returns>
         public async Task<WallabagItem> GetItemAsync(int itemId)
         {
             var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, $"/entries/{itemId}");
