@@ -8,16 +8,41 @@ namespace wallabag.Api
 {
     public partial class WallabagClient
     {
+        /// <summary>
+        /// The Uri of the wallabag instance.
+        /// </summary>
         public Uri InstanceUri { get; set; }
         public Uri _AuthenticationUri { get { return new Uri($"{InstanceUri}oauth/v2/token"); } }
 
         protected DateTime _LastRequestDateTime;
 
+        /// <summary>
+        /// The given client id.
+        /// </summary>
         public string ClientId { get; set; }
+
+        /// <summary>
+        /// The given client secret.
+        /// </summary>
         public string ClientSecret { get; set; }
+
+        /// <summary>
+        /// The given access token.
+        /// </summary>
         public string AccessToken { get; set; }
+
+        /// <summary>
+        /// The given refresh token.
+        /// </summary>
         public string RefreshToken { get; set; }
 
+        /// <summary>
+        /// Requests both <see cref="AccessToken"/> and <see cref="RefreshToken"/> for the first time. 
+        /// Should be used only once, for future authentication calls use <see cref="RefreshAccessTokenAsync"/>.
+        /// </summary>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        /// <returns>True, if login was successful, false otherwise.</returns>
         public async Task<bool> RequestTokenAsync(string username, string password)
         {
             Dictionary<string, string> parameters = new Dictionary<string, string>();
@@ -43,6 +68,11 @@ namespace wallabag.Api
 
             return true;
         }
+
+        /// <summary>
+        /// Returns always a valid <see cref="AccessToken"/>. In case it's expired, the <see cref="RefreshAccessTokenAsync"/> task is called.
+        /// </summary>
+        /// <returns>A valid <seealso cref="AccessToken"/>.</returns>
         public async Task<string> GetAccessTokenAsync()
         {
             TimeSpan duration = DateTime.UtcNow.Subtract(_LastRequestDateTime);
@@ -51,6 +81,11 @@ namespace wallabag.Api
 
             return AccessToken;
         }
+
+        /// <summary>
+        /// Refreshes a token by using the given <see cref="RefreshToken"/>.
+        /// </summary>
+        /// <returns>True, if re-authentication was successful, false otherwise.</returns>
         public async Task<bool> RefreshAccessTokenAsync()
         {
             if (string.IsNullOrEmpty(RefreshToken))
