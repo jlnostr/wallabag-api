@@ -46,7 +46,7 @@ namespace wallabag.Api.Models
         public IEnumerable<WallabagTag> Tags { get; set; }
 
         [JsonProperty("preview_picture")]
-        public string PreviewPictureUri { get; set; } = string.Empty;
+        public string PreviewImageUri { get; set; } = string.Empty;
 
 
         public override string ToString() => this.Title;
