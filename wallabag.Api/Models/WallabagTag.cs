@@ -4,9 +4,15 @@ namespace wallabag.Api.Models
 {
     public class WallabagTag
     {
+        /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
         [JsonProperty("id")]
         public int Id { get; set; }
 
+        /// <summary>
+        /// Gets or sets the label of a tag.
+        /// </summary>
         [JsonProperty("label")]
         public string Label { get; set; }
 
