@@ -32,5 +32,21 @@ namespace wallabag.Api.Tests
             AssertExtensions.ThrowsExceptionAsync<ArgumentNullException>(async () => await client.RequestTokenAsync("username", string.Empty));
             AssertExtensions.ThrowsExceptionAsync<ArgumentNullException>(async () => await client.RequestTokenAsync(string.Empty, "password"));
         }
+
+        [TestMethod]
+        [TestCategory("Authentication")]
+        public async Task LastTokenRefreshDateTimeInPastRefreshesToken()
+        {
+            await client.RequestTokenAsync(username, password);
+
+            var oldAccessToken = client.AccessToken;
+            var oldRefreshToken = client.RefreshToken;
+
+            client.LastTokenRefreshDateTime = DateTime.UtcNow - TimeSpan.FromHours(6);
+
+            Assert.IsTrue(await client.RefreshAccessTokenAsync());
+            Assert.AreNotEqual(oldAccessToken, client.AccessToken);
+            Assert.AreNotEqual(oldRefreshToken, client.RefreshToken);
+        }
     }
 }
