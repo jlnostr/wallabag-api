@@ -6,12 +6,10 @@
     <title>$title$</title>
     <authors>Julian Oster</authors>
     <owners>Julian Oster</owners>
-    <!--
-    <licenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</licenseUrl>
-    <projectUrl>http://PROJECT_URL_HERE_OR_DELETE_THIS_LINE</projectUrl>
-    <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl> -->
+    <licenseUrl>https://github.com/jlnostr/wallabag-api/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>https://github.com/jlnostr/wallabag-api</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>wallabag.Api is a portable class library that integrates the wallabag v2 API.</description>
+    <description>wallabag-api is a .NET library written in C# that integrates the wallabag API.</description>
     <!--
     <releaseNotes>
       <![CDATA[
@@ -21,5 +19,8 @@
 	-->
     <copyright>Copyright Julian Oster 2016</copyright>
     <tags>wallabag pocket API v2</tags>
+    <dependencies>
+  		<dependency id="Newtonsoft.Json" version="7.0.1" />
+	</dependencies>
   </metadata>
 </package>
