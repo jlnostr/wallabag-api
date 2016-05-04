@@ -14,7 +14,10 @@ namespace wallabag.Api
         public Uri InstanceUri { get; set; }
         private Uri _AuthenticationUri { get { return new Uri($"{InstanceUri}oauth/v2/token"); } }
 
-        protected DateTime _LastRequestDateTime;
+        /// <summary>
+        /// The DateTime value that specifies the last execution method of <see cref="RefreshAccessTokenAsync"/>.
+        /// </summary>
+        public DateTime LastTokenRefreshDateTime { get; set; }
 
         /// <summary>
         /// The given client id.
@@ -64,7 +67,7 @@ namespace wallabag.Api
             AccessToken = result.access_token;
             RefreshToken = result.refresh_token;
 
-            _LastRequestDateTime = DateTime.UtcNow;
+            LastTokenRefreshDateTime = DateTime.UtcNow;
 
             return true;
         }
@@ -75,7 +78,7 @@ namespace wallabag.Api
         /// <returns>A valid <seealso cref="AccessToken"/>.</returns>
         public async Task<string> GetAccessTokenAsync()
         {
-            TimeSpan duration = DateTime.UtcNow.Subtract(_LastRequestDateTime);
+            TimeSpan duration = DateTime.UtcNow.Subtract(LastTokenRefreshDateTime);
             if (duration.TotalSeconds > 3600)
                 await RefreshAccessTokenAsync();
 
@@ -108,7 +111,7 @@ namespace wallabag.Api
             dynamic result = JsonConvert.DeserializeObject(responseString);
             AccessToken = result.access_token;
             RefreshToken = result.refresh_token;
-            _LastRequestDateTime = DateTime.UtcNow;
+            LastTokenRefreshDateTime = DateTime.UtcNow;
 
             return true;
         }
