@@ -29,6 +29,29 @@ namespace wallabag.Api
             int? ItemsPerPage = null,
             string[] Tags = null)
         {
+            return (await GetItemsWithEnhancedMetadataAsync(IsRead, IsStarred, DateOrder, SortOrder, PageNumber, ItemsPerPage, Tags)).Items;
+        }
+
+        /// <summary>
+        /// Returns a result of <see cref="ItemCollectionResponse"/> that contains metadata (number of pages, current page, etc.) along with the items.
+        /// </summary>
+        /// <param name="IsRead">Indicates if the item is read (archived) or not.</param>
+        /// <param name="IsStarred">Indicates if the item is starred.</param>
+        /// <param name="DateOrder">Sort order, in which the items should be returned. Can be <see cref="WallabagDateOrder.ByCreationDate"/> or <see cref="WallabagDateOrder.ByLastModificationDate"/>.</param>
+        /// <param name="SortOrder">"Classic" sort order, ascending or descending.</param>
+        /// <param name="PageNumber">Number of page.</param>
+        /// <param name="ItemsPerPage">Number of items per page.</param>
+        /// <param name="Tags">An array of tags that applies to all items.</param>
+        /// <returns></returns>
+        public async Task<ItemCollectionResponse> GetItemsWithEnhancedMetadataAsync(
+            bool? IsRead = null,
+            bool? IsStarred = null,
+            WallabagDateOrder? DateOrder = null,
+            WallabagSortOrder? SortOrder = null,
+            int? PageNumber = null,
+            int? ItemsPerPage = null,
+            string[] Tags = null)
+        {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             var requestUriSubString = "/entries";
 
@@ -59,7 +82,7 @@ namespace wallabag.Api
             }
 
             var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, requestUriSubString);
-            return (await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<ItemCollectionResponse>(jsonString))).Embedded.Items;
+            return await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<ItemCollectionResponse>(jsonString));
         }
 
         /// <summary>
