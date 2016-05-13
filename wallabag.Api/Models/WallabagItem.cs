@@ -91,7 +91,7 @@ namespace wallabag.Api.Models
         /// Gets or sets the Uri of the preview image.
         /// </summary>
         [JsonProperty("preview_picture")]
-        public string PreviewImageUri { get; set; } = string.Empty;
+        public Uri PreviewImageUri { get; set; }
 
 
         public override string ToString() => this.Title;
