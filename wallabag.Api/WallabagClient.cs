@@ -11,6 +11,12 @@ namespace wallabag.Api
     {
         private HttpClient _httpClient;
 
+        /// <summary>
+        /// Initializes a new instance of WallabagClient.
+        /// </summary>
+        /// <param name="Uri">The Uri of the wallabag instance of the user.</param>
+        /// <param name="ClientId">The OAuth client id of the app.</param>
+        /// <param name="ClientSecret">The OAuth client secret of the app.</param>
         public WallabagClient(Uri Uri, string ClientId, string ClientSecret)
         {
             this.InstanceUri = Uri;
@@ -20,12 +26,14 @@ namespace wallabag.Api
             this._httpClient = new HttpClient();
         }
 
+        /// <summary>
+        /// Returns the version number of the current wallabag instance.
+        /// </summary>
         public async Task<string> GetVersionNumberAsync()
         {
             var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, "/version");
             return await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<string>(jsonString));
         }
-
 
         protected async Task<string> ExecuteHttpRequestAsync(HttpRequestMethod httpRequestMethod, string RelativeUriString, Dictionary<string, object> parameters = default(Dictionary<string, object>))
         {

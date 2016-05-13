@@ -2,6 +2,9 @@
 
 namespace wallabag.Api.Models
 {
+    /// <summary>
+    /// Represents a tag that can be applied to one or more items.
+    /// </summary>
     public class WallabagTag
     {
         /// <summary>

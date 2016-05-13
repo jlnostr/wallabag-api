@@ -7,6 +7,9 @@ using wallabag.Api.Responses;
 
 namespace wallabag.Api
 {
+    /// <summary>
+    /// Represents an instance of WallabagClient which is used to access the API.
+    /// </summary>
     public partial class WallabagClient
     {
         /// <summary>
@@ -96,7 +99,34 @@ namespace wallabag.Api
             return await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<WallabagItem>(jsonString));
         }
 
-        public enum WallabagDateOrder { ByCreationDate, ByLastModificationDate }
-        public enum WallabagSortOrder { Ascending, Descending }
+        /// <summary>
+        /// Represents the order by which the items should be sorted.
+        /// </summary>
+        public enum WallabagDateOrder
+        {
+            /// <summary>
+            /// Sorts the items by creation date.
+            /// </summary>
+            ByCreationDate,
+            /// <summary>
+            /// Sorts the items by last modification date.
+            /// </summary>
+            ByLastModificationDate
+        }
+
+        /// <summary>
+        /// Represents the sorting method.
+        /// </summary>
+        public enum WallabagSortOrder
+        {
+            /// <summary>
+            /// Sorts the items ascending.
+            /// </summary>
+            Ascending,
+            /// <summary>
+            /// Sorts the items descending.
+            /// </summary>
+            Descending
+        }
     }
 }
