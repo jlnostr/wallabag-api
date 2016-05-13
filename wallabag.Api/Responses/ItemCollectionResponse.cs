@@ -19,9 +19,16 @@ namespace wallabag.Api.Responses
         public int TotalNumberOfItems { get; set; }
 
         [JsonProperty("_embedded")]
-        public Embedded Embedded { get; set; }
+        private Embedded _Embedded { get; set; }
+
+        [JsonIgnore]
+        public IEnumerable<WallabagItem> Items
+        {
+            get { return _Embedded.Items; }
+            set { _Embedded.Items = value; }
+        }
     }
-    public class Embedded
+    class Embedded
     {
         [JsonProperty("items")]
         public IEnumerable<WallabagItem> Items { get; set; }
