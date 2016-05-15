@@ -27,6 +27,14 @@ namespace wallabag.Api.Models
 
         public override string ToString() => this.Label;
         public override int GetHashCode() => this.Id;
-        public override bool Equals(object obj) => (obj as WallabagTag).Id.Equals(this.Id);
+        public override bool Equals(object obj)
+        {
+            if (obj != null && obj.GetType().Equals(typeof(WallabagTag)))
+            {
+                var comparedItem = obj as WallabagTag;
+                return Id.Equals(comparedItem.Id);
+            }
+            return false;
+        }
     }
 }

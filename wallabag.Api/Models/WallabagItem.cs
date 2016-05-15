@@ -94,11 +94,15 @@ namespace wallabag.Api.Models
         public Uri PreviewImageUri { get; set; }
 
 
-        public override string ToString() => this.Title;
+        public override string ToString() => this.Title ?? string.Empty;
         public override bool Equals(object obj)
         {
-            var comparedItem = obj as WallabagItem;
-            return Id.Equals(comparedItem.Id) && CreationDate.Equals(comparedItem.CreationDate);
+            if (obj != null && obj.GetType().Equals(typeof(WallabagItem)))
+            {
+                var comparedItem = obj as WallabagItem;
+                return Id.Equals(comparedItem.Id) && CreationDate.Equals(comparedItem.CreationDate);
+            }
+            return false;
         }
         public override int GetHashCode() => Id;
     }
