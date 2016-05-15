@@ -1,3 +1,6 @@
+## 1.0.3
+- Fix for ObjectNotReferencedExceptions when using LINQ.
+
 ## 1.0.2
 - Include comments in NuGet package (they weren't until now)
 - Change type of PreviewImageUri to Uri
