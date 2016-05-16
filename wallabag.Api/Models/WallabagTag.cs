@@ -1,11 +1,12 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace wallabag.Api.Models
 {
     /// <summary>
     /// Represents a tag that can be applied to one or more items.
     /// </summary>
-    public class WallabagTag
+    public class WallabagTag : IComparable
     {
         /// <summary>
         /// Gets or sets the id.
@@ -36,5 +37,7 @@ namespace wallabag.Api.Models
             }
             return false;
         }
+        public int CompareTo(object obj) => ((IComparable)Label).CompareTo(obj);
+
     }
 }

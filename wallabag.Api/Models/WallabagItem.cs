@@ -7,7 +7,7 @@ namespace wallabag.Api.Models
     /// <summary>
     /// Item containing all available data.
     /// </summary>
-    public class WallabagItem
+    public class WallabagItem : IComparable
     {
         /// <summary>
         /// Gets or sets the id.
@@ -105,5 +105,13 @@ namespace wallabag.Api.Models
             return false;
         }
         public override int GetHashCode() => Id;
+
+        public int CompareTo(object obj)
+        {
+            if (((IComparable)Id).CompareTo(obj) == 0)
+                return 0;
+            else
+                return ((IComparable)LastUpdated).CompareTo(obj);
+        }
     }
 }
