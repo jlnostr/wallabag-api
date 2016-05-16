@@ -6,7 +6,7 @@ using static wallabag.Api.WallabagClient;
 
 namespace wallabag.Api
 {
-    interface IWallabagClient
+    interface IWallabagClient : IDisposable
     {
         Uri InstanceUri { get; set; }
         string ClientId { get; set; }

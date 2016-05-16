@@ -26,6 +26,8 @@ namespace wallabag.Api
             this._httpClient = new HttpClient();
         }
 
+        public void Dispose() => _httpClient.Dispose();
+
         /// <summary>
         /// Returns the version number of the current wallabag instance.
         /// </summary>
