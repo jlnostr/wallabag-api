@@ -1,3 +1,8 @@
+## 1.0.4
+- Implement IDisposable for WallabagClient.
+- Implement IComparable for WallabagItem and WallabagTag.
+- WallabagTag.Equals is now based on the label instead of the id.
+
 ## 1.0.3
 - Fix for ObjectNotReferencedExceptions when using LINQ.
 
