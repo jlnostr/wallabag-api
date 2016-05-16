@@ -31,8 +31,8 @@ namespace wallabag.Api.Models
         {
             if (obj != null && obj.GetType().Equals(typeof(WallabagTag)))
             {
-                var comparedItem = obj as WallabagTag;
-                return Id.Equals(comparedItem.Id);
+                var comparedTag = obj as WallabagTag;
+                return Label.Equals(comparedTag.Label);
             }
             return false;
         }
