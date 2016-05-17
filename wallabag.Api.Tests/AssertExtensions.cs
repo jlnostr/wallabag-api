@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -26,31 +26,26 @@ namespace wallabag.Api.Tests
         public async static Task<T> ThrowsExceptionAsync<T>(Func<Task> action, string message, object[] parameters)
             where T : Exception
         {
-            try
-            {
-                await action();
-            }
+            try { await action(); }
             catch (Exception ex)
             {
                 if (ex.GetType() == typeof(T))
-                {
                     return ex as T;
-                }
 
                 var objArray = new object[] {
-                "AssertExtensions.ThrowsExceptionAsync",
-                string.Format(CultureInfo.CurrentCulture, FrameworkMessages.WrongExceptionThrown, message, typeof(T).Name, ex.GetType().Name, ex.Message, ex.StackTrace)
-            };
+                    "AssertExtensions.ThrowsExceptionAsync",
+                    string.Format(CultureInfo.CurrentCulture,  message, typeof(T).Name, ex.GetType().Name, ex.Message, ex.StackTrace)
+                };
 
-                throw new AssertFailedException(string.Format(CultureInfo.CurrentCulture, FrameworkMessages.AssertionFailed, objArray));
+                throw new AssertFailedException(UnitTestOutcome.Failed.ToString());
             }
 
             var objArray2 = new object[] {
-            "AssertExtensions.ThrowsExceptionAsync",
-            string.Format(CultureInfo.CurrentCulture, FrameworkMessages.NoExceptionThrown, message, typeof(T).Name)
-        };
+                "AssertExtensions.ThrowsExceptionAsync",
+                string.Format(CultureInfo.CurrentCulture, "No exception thrown.", message, typeof(T).Name)
+            };
 
-            throw new AssertFailedException(string.Format(CultureInfo.CurrentCulture, FrameworkMessages.AssertionFailed, objArray2));
+            throw new AssertFailedException(string.Format(CultureInfo.CurrentCulture, "Failed.", UnitTestOutcome.Failed, objArray2));
         }
     }
 }

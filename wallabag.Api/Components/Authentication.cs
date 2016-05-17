@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.Web.Http;
+using System.Net.Http;
 
 namespace wallabag.Api
 {
@@ -55,7 +55,7 @@ namespace wallabag.Api
             parameters.Add("username", username);
             parameters.Add("password", password);
 
-            var content = new HttpStringContent(JsonConvert.SerializeObject(parameters), Windows.Storage.Streams.UnicodeEncoding.Utf8, "application/json");
+            var content = new StringContent(JsonConvert.SerializeObject(parameters), System.Text.Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(_AuthenticationUri, content);
 
             if (!response.IsSuccessStatusCode)
@@ -100,7 +100,7 @@ namespace wallabag.Api
             parameters.Add("client_secret", ClientSecret);
             parameters.Add("refresh_token", RefreshToken);
 
-            var content = new HttpStringContent(JsonConvert.SerializeObject(parameters), Windows.Storage.Streams.UnicodeEncoding.Utf8, "application/json");
+            var content = new StringContent(JsonConvert.SerializeObject(parameters), System.Text.Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(_AuthenticationUri, content);
 
             if (!response.IsSuccessStatusCode)

@@ -1,6 +1,7 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace wallabag.Api.Tests
 {
@@ -18,22 +19,38 @@ namespace wallabag.Api.Tests
 
         [TestMethod]
         [TestCategory("Add")]
-        [DataRow("http://www.zeit.de/politik/ausland/2016-04/oesterreich-kommentar-praesidentenwahl-triumph-rechtspopulisten", "politik")]
-        [DataRow("http://www.nytimes.com/2016/04/25/opinion/europes-web-privacy-rules-bad-for-google-bad-for-everyone.html?ref=technology", "tech")]
-        public async Task AddArticleWithSampleTag(string url, string tag)
+        public async Task AddArticleWithSampleTag()
         {
-            var item = await client.AddAsync(new Uri(url), new string[] { tag });
-            Assert.IsTrue(item.Tags.ToCommaSeparatedString().Contains(tag));
+            Dictionary<string, string> sampleItems = new Dictionary<string, string>()
+            {
+                ["http://www.zeit.de/2016/18/udo-lindenberg-atlantic-hotel-rockstar"] = "lindenberg",
+                ["https://www.youtube.com/watch?v=HMQkV5cTuoY"] = "böhmermann",
+                ["https://www.youtube.com/watch?v=rHia2TDEUmc"] = "youtube"
+            };
+
+            foreach (var item in sampleItems)
+            {
+                var result = await client.AddAsync(new Uri(item.Key), new string[] { item.Value });
+                StringAssert.Contains(result.Tags.ToCommaSeparatedString(), item.Value);
+            }
         }
 
         [TestMethod]
         [TestCategory("Add")]
-        [DataRow("http://www.nytimes.com/2016/04/23/arts/music/prince-music-technology-distribution.html?ref=technology", "Prince was an musician")]
-        [DataRow("http://www.nytimes.com/2016/02/25/technology/personaltech/tips-and-myths-about-extending-smartphone-battery-life.html?ref=technology", "Unit testing ftw!")]
-        public async Task AddArticleWithGivenTitle(string url, string title)
+        public async Task AddArticleWithGivenTitle()
         {
-            var item = await client.AddAsync(new Uri(url), title: title);
-            Assert.IsTrue(item.Title == title);
+            Dictionary<string, string> sampleItems = new Dictionary<string, string>()
+            {
+                ["http://www.faz.net/aktuell/wirtschaft/neue-mobilitaet/autonomes-fahren-im-test-bei-mercedes-bmw-und-audi-14237392.html"] = "Yay, autonomes Fahren :)",
+                ["http://www.zeit.de/digital/internet/2016-05/bundesgerichtshof-wlan-internet-nutzung-gaeste-filesharing"] = "Störerhaftung und so.",
+                ["http://www.zeit.de/digital/internet/2016-05/xkcd-randall-munroe-webcomic"] = "xkcd <3"
+            };
+
+            foreach (var item in sampleItems)
+            {
+                var result = await client.AddAsync(new Uri(item.Key), title: item.Value);
+                StringAssert.Equals(result.Title, item.Value);
+            }
         }
     }
 }

@@ -1,9 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
-using Windows.Web.Http;
-using Windows.Web.Http.Headers;
 
 namespace wallabag.Api
 {
@@ -39,13 +38,14 @@ namespace wallabag.Api
 
         protected async Task<string> ExecuteHttpRequestAsync(HttpRequestMethod httpRequestMethod, string RelativeUriString, Dictionary<string, object> parameters = default(Dictionary<string, object>))
         {
-            _httpClient.DefaultRequestHeaders.Authorization = new HttpCredentialsHeaderValue("Bearer", await GetAccessTokenAsync());
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", await GetAccessTokenAsync());
 
             if (string.IsNullOrEmpty(AccessToken))
                 throw new Exception("Access token not available. Please create one using the RequestTokenAsync() method first.");
 
             Uri requestUri = new Uri($"{InstanceUri}api{RelativeUriString}.json");
-            var content = new HttpStringContent(JsonConvert.SerializeObject(parameters), Windows.Storage.Streams.UnicodeEncoding.Utf8, "application/json");
+
+            var content = new StringContent(JsonConvert.SerializeObject(parameters), System.Text.Encoding.UTF8, "application/json");
 
             string httpMethodString = "GET";
             switch (httpRequestMethod)
@@ -64,7 +64,7 @@ namespace wallabag.Api
 
             try
             {
-                var response = await _httpClient.SendRequestAsync(request);
+                var response = await _httpClient.SendAsync(request);
                 response.EnsureSuccessStatusCode();
 
                 return await response.Content.ReadAsStringAsync();
