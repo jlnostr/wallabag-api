@@ -9,10 +9,10 @@ namespace wallabag.Api.Tests
     {
         [TestMethod]
         [TestCategory("Authentication")]
-        public void RefreshingTokenFailsIfThereIsNoRefreshToken()
+        public async Task RefreshingTokenFailsIfThereIsNoRefreshToken()
         {
             client.RefreshToken = string.Empty;
-            AssertExtensions.ThrowsExceptionAsync<Exception>(async () => await client.RefreshAccessTokenAsync());
+            await AssertExtensions.ThrowsExceptionAsync<ArgumentNullException>(async () => await client.RefreshAccessTokenAsync());
         }
 
         [TestMethod]
