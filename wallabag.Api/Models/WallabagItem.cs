@@ -100,18 +100,12 @@ namespace wallabag.Api.Models
             if (obj != null && obj.GetType().Equals(typeof(WallabagItem)))
             {
                 var comparedItem = obj as WallabagItem;
-                return Id.Equals(comparedItem.Id) && CreationDate.Equals(comparedItem.CreationDate);
+                return Id.Equals(comparedItem.Id) && LastUpdated.Equals(comparedItem.LastUpdated);
             }
             return false;
         }
         public override int GetHashCode() => Id;
+        public int CompareTo(object obj) => LastUpdated.CompareTo((obj as WallabagItem).LastUpdated);
 
-        public int CompareTo(object obj)
-        {
-            if (((IComparable)Id).CompareTo(obj) == 0)
-                return 0;
-            else
-                return ((IComparable)LastUpdated).CompareTo(obj);
-        }
     }
 }
