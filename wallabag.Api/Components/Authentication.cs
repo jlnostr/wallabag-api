@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Net.Http;
+using wallabag.Api.Responses;
 
 namespace wallabag.Api
 {
@@ -63,9 +64,9 @@ namespace wallabag.Api
 
             var responseString = await response.Content.ReadAsStringAsync();
 
-            dynamic result = JsonConvert.DeserializeObject(responseString);
-            AccessToken = result.access_token;
-            RefreshToken = result.refresh_token;
+            var result = JsonConvert.DeserializeObject<AuthenticationResponse>(responseString);
+            AccessToken = result.AccessToken;
+            RefreshToken = result.RefreshToken;
 
             LastTokenRefreshDateTime = DateTime.UtcNow;
 
@@ -92,7 +93,7 @@ namespace wallabag.Api
         public async Task<bool> RefreshAccessTokenAsync()
         {
             if (string.IsNullOrEmpty(RefreshToken))
-                throw new Exception("RefreshToken has no value. It will created once you've authenticated the first time.");
+                throw new ArgumentNullException("RefreshToken has no value. It will created once you've authenticated the first time.");
 
             Dictionary<string, string> parameters = new Dictionary<string, string>();
             parameters.Add("grant_type", "refresh_token");
@@ -108,9 +109,9 @@ namespace wallabag.Api
 
             var responseString = await response.Content.ReadAsStringAsync();
 
-            dynamic result = JsonConvert.DeserializeObject(responseString);
-            AccessToken = result.access_token;
-            RefreshToken = result.refresh_token;
+            var result = JsonConvert.DeserializeObject<AuthenticationResponse>(responseString);
+            AccessToken = result.AccessToken;
+            RefreshToken = result.RefreshToken;
             LastTokenRefreshDateTime = DateTime.UtcNow;
 
             return true;

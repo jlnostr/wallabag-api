@@ -43,6 +43,7 @@
     <Compile Include="Models\WallabagItem.cs" />
     <Compile Include="Models\WallabagTag.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Responses\AuthenticationResponse.cs" />
     <Compile Include="Responses\ItemCollectionResponse.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="WallabagClient.cs" />
