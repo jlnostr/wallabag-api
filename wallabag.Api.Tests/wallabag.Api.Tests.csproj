@@ -55,6 +55,7 @@
     <Compile Include="AuthenticationTests.cs" />
     <Compile Include="Credentials.cs" />
     <Compile Include="GeneralTests.cs" />
+    <Compile Include="EqualityTests.cs" />
     <Compile Include="GetTests.cs" />
     <Compile Include="ModifyTests.cs" />
     <Compile Include="TagsTests.cs" />
