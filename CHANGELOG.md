@@ -1,3 +1,7 @@
+## 1.1.0
+- wallabag-api is now a PCL and therefore compatible for more platforms.
+- And some bugfixes, of course :D
+
 ## 1.0.4
 - Implement IDisposable for WallabagClient.
 - Implement IComparable for WallabagItem and WallabagTag.
