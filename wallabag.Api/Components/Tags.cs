@@ -18,13 +18,39 @@ namespace wallabag.Api
             return await ParseJsonFromStringAsync<IEnumerable<WallabagTag>>(jsonString);
         }
 
+        #region AddTagsAsync
+
         /// <summary>
-        /// Adds tags to an item with a given id.
+        /// Adds tags to an item.
         /// </summary>
         /// <param name="itemId">The item id.</param>
-        /// <param name="tags">A string array of tags that should be added.</param>
+        /// <param name="tags">The tags that should be added.</param>
         /// <returns>A list of all tags of the updated item with their specific id.</returns>
-        public async Task<IEnumerable<WallabagTag>> AddTagsAsync(int itemId, string[] tags)
+        public Task<IEnumerable<WallabagTag>> AddTagsAsync(int itemId, string[] tags) => AddTagsAsync(itemId, tags);
+
+        /// <summary>
+        /// Adds tags to an item.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <param name="tags">The tags that should be added.</param>
+        /// <returns>A list of all tags of the updated item with their specific id.</returns>
+        public Task<IEnumerable<WallabagTag>> AddTagsAsync(WallabagItem item, string[] tags) => AddTagsAsync(item.Id, tags);
+    
+        /// <summary>
+        /// Adds tags to an item.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <param name="tags">The tags that should be added.</param>
+        /// <returns>A list of all tags of the updated item with their specific id.</returns>
+        public Task<IEnumerable<WallabagTag>> AddTagsAsync(WallabagItem item, IEnumerable<string> tags) => AddTagsAsync(item.Id, tags);
+
+        /// <summary>
+        /// Adds tags to an item.
+        /// </summary>
+        /// <param name="itemId">The item id.</param>
+        /// <param name="tags">The tags that should be added.</param>
+        /// <returns>A list of all tags of the updated item with their specific id.</returns>
+        public async Task<IEnumerable<WallabagTag>> AddTagsAsync(int itemId, IEnumerable<string> tags)
         {
             var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Post, $"/entries/{itemId}/tags", new Dictionary<string, object>() { ["tags"] = tags.ToCommaSeparatedString() });
             var returnedItem = await ParseJsonFromStringAsync<WallabagItem>(jsonString);
@@ -38,13 +64,17 @@ namespace wallabag.Api
             return returnedItem?.Tags;
         }
 
+        #endregion
+
+        #region RemoveTagsAsync
+
         /// <summary>
         /// Removes tags from an item with a given id.
         /// </summary>
         /// <param name="itemId">The item id.</param>
         /// <param name="tags">An array of tags that should be removed.</param>
         /// <returns>True, if the action was successful.</returns>
-        public async Task<bool> RemoveTagsAsync(int itemId, WallabagTag[] tags)
+        public async Task<bool> RemoveTagsAsync(int itemId, IEnumerable<WallabagTag> tags)
         {
             var lastJson = string.Empty;
             foreach (var item in tags)
@@ -62,6 +92,32 @@ namespace wallabag.Api
         }
 
         /// <summary>
+        /// Removes tags from an item.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <param name="tags">An array of tags that should be removed.</param>
+        /// <returns>True, if the action was successful.</returns>
+        public Task<bool> RemoveTagsAsync(WallabagItem item, WallabagTag[] tags) => RemoveTagsAsync(item.Id, tags);
+   
+        /// <summary>
+        /// Removes tags from an item with a given id.
+        /// </summary>
+        /// <param name="itemId">The item id.</param>
+        /// <param name="tags">An array of tags that should be removed.</param>
+        /// <returns>True, if the action was successful.</returns>
+        public Task<bool> RemoveTagsAsync(int itemId, WallabagTag[] tags) => RemoveTagsAsync(itemId, tags);
+   
+        /// <summary>
+        /// Removes tags from an item.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <param name="tags">An array of tags that should be removed.</param>
+        /// <returns>True, if the action was successful.</returns>
+        public Task<bool> RemoveTagsAsync(WallabagItem item, IEnumerable<WallabagTag> tags) => RemoveTagsAsync(item.Id, tags);
+
+        #endregion
+
+        /// <summary>
         /// Removes a tag from all items.
         /// </summary>
         /// <param name="tag">The tag that should be deleted.</param>
@@ -72,20 +128,8 @@ namespace wallabag.Api
             return true;
         }
 
-        /// <summary>
-        /// Adds tags to an item.
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <param name="tags">A string array of tags that should be added.</param>
-        /// <returns>A list of all tags of the updated item with their specific id.</returns>
-        public Task<IEnumerable<WallabagTag>> AddTagsAsync(WallabagItem item, string[] tags) => AddTagsAsync(item.Id, tags);
 
-        /// <summary>
-        /// Removes tags from an item.
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <param name="tags">An array of tags that should be removed.</param>
-        /// <returns>True, if the action was successful.</returns>
-        public Task<bool> RemoveTagsAsync(WallabagItem item, WallabagTag[] tags) => RemoveTagsAsync(item.Id, tags);
+
+     
     }
 }

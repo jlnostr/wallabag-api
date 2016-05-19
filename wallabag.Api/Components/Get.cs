@@ -28,11 +28,11 @@ namespace wallabag.Api
             WallabagSortOrder? SortOrder = null,
             int? PageNumber = null,
             int? ItemsPerPage = null,
-            string[] Tags = null)
+            IEnumerable<string> Tags = null)
         {
             return (await GetItemsWithEnhancedMetadataAsync(IsRead, IsStarred, DateOrder, SortOrder, PageNumber, ItemsPerPage, Tags))?.Items;
         }
-
+        
         /// <summary>
         /// Returns a result of <see cref="ItemCollectionResponse"/> that contains metadata (number of pages, current page, etc.) along with the items.
         /// </summary>
@@ -51,7 +51,7 @@ namespace wallabag.Api
             WallabagSortOrder? SortOrder = null,
             int? PageNumber = null,
             int? ItemsPerPage = null,
-            string[] Tags = null)
+           IEnumerable<string> Tags = null)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             var requestUriSubString = "/entries";
@@ -94,7 +94,7 @@ namespace wallabag.Api
         public async Task<WallabagItem> GetItemAsync(int itemId)
         {
             var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, $"/entries/{itemId}");
-          var result = await ParseJsonFromStringAsync<WallabagItem>(jsonString);
+            var result = await ParseJsonFromStringAsync<WallabagItem>(jsonString);
             return result;
         }
 

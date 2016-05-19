@@ -29,7 +29,7 @@ namespace wallabag.Api
             WallabagSortOrder? SortOrder = null,
             int? PageNumber = null,
             int? ItemsPerPage = null,
-            string[] Tags = null);
+            IEnumerable<string> Tags = null);
         Task<WallabagItem> GetItemAsync(int itemId);
         Task<IEnumerable<WallabagTag>> GetTagsAsync();
 
