@@ -1,3 +1,8 @@
+## 1.1.1
+- Return null or false if the request failed.
+- Add ability to submit tags as type of IEnumerable.
+- Better MVVM support with the implementation of INotifyPropertyChanged.
+
 ## 1.1.0
 - wallabag-api is now a PCL and therefore compatible for more platforms.
 - And some bugfixes, of course :D
