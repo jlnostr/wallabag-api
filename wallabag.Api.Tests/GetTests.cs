@@ -82,5 +82,34 @@ namespace wallabag.Api.Tests
             Assert.IsTrue(firstItem.IsStarred == false);
             Assert.IsTrue(firstItem.IsRead == true);
         }
+
+        [TestMethod]
+        [TestCategory("Get")]
+        public async Task ExecutionOfInvalidRequestReturnsNull()
+        {
+            var accessToken = client.AccessToken;
+            var refreshToken = client.RefreshToken;
+
+            client.AccessToken = "veryrandomkey";
+            client.RefreshToken = "anotherrandombullshit";
+
+            var singleItem = await client.GetItemAsync(1337);
+            Assert.IsNull(singleItem);
+
+            var multipleItems = await client.GetItemsAsync(ItemsPerPage: 1337);
+            Assert.IsNull(multipleItems);
+
+            var multipleItemsWithMetadata = await client.GetItemsWithEnhancedMetadataAsync(ItemsPerPage: 1337);
+            Assert.IsNull(multipleItemsWithMetadata);
+
+            var unarchivedItem = await client.UnarchiveAsync(1337);
+            Assert.IsFalse(unarchivedItem);
+
+            var starredItem = await client.FavoriteAsync(1337);
+            Assert.IsFalse(starredItem);
+
+            client.AccessToken = accessToken;
+            client.RefreshToken = refreshToken;
+        }
     }
 }
