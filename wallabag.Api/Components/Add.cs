@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using wallabag.Api.Models;
@@ -29,7 +28,7 @@ namespace wallabag.Api
                 parameters.Add("title", title);
 
             var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Post, "/entries", parameters);
-            return await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<WallabagItem>(jsonString));
+            return await ParseJsonFromStringAsync<WallabagItem>(jsonString);
         }
     }
 }

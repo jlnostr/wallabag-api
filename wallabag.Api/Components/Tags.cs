@@ -15,7 +15,7 @@ namespace wallabag.Api
         public async Task<IEnumerable<WallabagTag>> GetTagsAsync()
         {
             var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, "/tags");
-            return await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<IEnumerable<WallabagTag>>(jsonString));
+            return await ParseJsonFromStringAsync<IEnumerable<WallabagTag>>(jsonString);
         }
 
         /// <summary>
@@ -27,15 +27,15 @@ namespace wallabag.Api
         public async Task<IEnumerable<WallabagTag>> AddTagsAsync(int itemId, string[] tags)
         {
             var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Post, $"/entries/{itemId}/tags", new Dictionary<string, object>() { ["tags"] = tags.ToCommaSeparatedString() });
-            var returnedItem = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<WallabagItem>(jsonString));
-            var itemTags = returnedItem.Tags as List<WallabagTag>;
+            var returnedItem = await ParseJsonFromStringAsync<WallabagItem>(jsonString);
+            var itemTags = returnedItem?.Tags as List<WallabagTag>;
 
             // Check if the tags are in the returned item
             foreach (var item in tags)
-                if (itemTags.Where(t => t.Label == item).Count() != 1)
+                if (itemTags?.Where(t => t.Label == item).Count() != 1)
                     return default(IEnumerable<WallabagTag>);
 
-            return returnedItem.Tags;
+            return returnedItem?.Tags;
         }
 
         /// <summary>
@@ -50,12 +50,12 @@ namespace wallabag.Api
             foreach (var item in tags)
                 lastJson = await ExecuteHttpRequestAsync(HttpRequestMethod.Delete, $"/entries/{itemId}/tags/{item.Id}");
 
-            var returnedItem = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<WallabagItem>(lastJson));
-            var itemTags = returnedItem.Tags as List<WallabagTag>;
+            var returnedItem = await ParseJsonFromStringAsync<WallabagItem>(lastJson);
+            var itemTags = returnedItem?.Tags as List<WallabagTag>;
 
             // Check if the tags aren't no longer in the returned item
             foreach (var item in tags)
-                if (itemTags.Where(t => t.Label == item.Label).Count() == 1)
+                if (itemTags?.Where(t => t.Label == item.Label).Count() == 1)
                     return false;
 
             return true;

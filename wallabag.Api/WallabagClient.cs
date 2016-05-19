@@ -65,13 +65,26 @@ namespace wallabag.Api
             try
             {
                 var response = await _httpClient.SendAsync(request);
-                response.EnsureSuccessStatusCode();
-
-                return await response.Content.ReadAsStringAsync();
+                if (response.IsSuccessStatusCode)
+                    return await response.Content.ReadAsStringAsync();
+                else
+                    return null;
             }
-            catch (Exception ex) { throw ex; }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine("[FAILURE] [wallabag-api] An error occured during the request: " + e.Message);
+                return null;
+            }
         }
-        public enum HttpRequestMethod { Delete, Get, Patch, Post, Put }
 
+        protected Task<T> ParseJsonFromStringAsync<T>(string s)
+        {
+            if (!string.IsNullOrEmpty(s))
+                return Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(s));
+            else
+                return Task.FromResult(default(T));
+        }
+
+        public enum HttpRequestMethod { Delete, Get, Patch, Post, Put }
     }
 }

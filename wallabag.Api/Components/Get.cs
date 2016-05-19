@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using wallabag.Api.Models;
 using wallabag.Api.Responses;
@@ -32,7 +30,7 @@ namespace wallabag.Api
             int? ItemsPerPage = null,
             string[] Tags = null)
         {
-            return (await GetItemsWithEnhancedMetadataAsync(IsRead, IsStarred, DateOrder, SortOrder, PageNumber, ItemsPerPage, Tags)).Items;
+            return (await GetItemsWithEnhancedMetadataAsync(IsRead, IsStarred, DateOrder, SortOrder, PageNumber, ItemsPerPage, Tags))?.Items;
         }
 
         /// <summary>
@@ -85,7 +83,7 @@ namespace wallabag.Api
             }
 
             var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, requestUriSubString);
-            return await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<ItemCollectionResponse>(jsonString));
+            return await ParseJsonFromStringAsync<ItemCollectionResponse>(jsonString);
         }
 
         /// <summary>
@@ -96,7 +94,8 @@ namespace wallabag.Api
         public async Task<WallabagItem> GetItemAsync(int itemId)
         {
             var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, $"/entries/{itemId}");
-            return await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<WallabagItem>(jsonString));
+          var result = await ParseJsonFromStringAsync<WallabagItem>(jsonString);
+            return result;
         }
 
         /// <summary>
