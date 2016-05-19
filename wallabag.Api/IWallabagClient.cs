@@ -20,7 +20,7 @@ namespace wallabag.Api
         Task<bool> RefreshAccessTokenAsync();
         Task<bool> RequestTokenAsync(string username, string password);
 
-        Task<WallabagItem> AddAsync(Uri uri, string[] tags = null, string title = null);
+        Task<WallabagItem> AddAsync(Uri uri, IEnumerable<string> tags = null, string title = null);
 
         Task<IEnumerable<WallabagItem>> GetItemsAsync(
             bool? IsRead = null,
@@ -44,8 +44,8 @@ namespace wallabag.Api
         Task<bool> DeleteAsync(int itemId);
         Task<bool> DeleteAsync(WallabagItem item);
 
-        Task<IEnumerable<WallabagTag>> AddTagsAsync(int itemId, string[] tags);
-        Task<IEnumerable<WallabagTag>> AddTagsAsync(WallabagItem item, string[] tags);
+        Task<IEnumerable<WallabagTag>> AddTagsAsync(int itemId, IEnumerable<string> tags);
+        Task<IEnumerable<WallabagTag>> AddTagsAsync(WallabagItem item, IEnumerable<string> tags);
         Task<bool> RemoveTagsAsync(int itemId, WallabagTag[] tags);
         Task<bool> RemoveTagsAsync(WallabagItem item, WallabagTag[] tags);
         Task<bool> RemoveTagFromAllItemsAsync(WallabagTag tag);
