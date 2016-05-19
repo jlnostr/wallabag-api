@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using PropertyChanged;
 using System;
 
 namespace wallabag.Api.Models
@@ -6,6 +7,7 @@ namespace wallabag.Api.Models
     /// <summary>
     /// Represents a tag that can be applied to one or more items.
     /// </summary>
+    [ImplementPropertyChanged]
     public class WallabagTag : IComparable
     {
         /// <summary>

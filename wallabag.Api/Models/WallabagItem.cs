@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using PropertyChanged;
 using System;
 using System.Collections.Generic;
 
@@ -7,6 +8,7 @@ namespace wallabag.Api.Models
     /// <summary>
     /// Item containing all available data.
     /// </summary>
+    [ImplementPropertyChanged]
     public class WallabagItem : IComparable
     {
         /// <summary>
