@@ -80,7 +80,7 @@ namespace wallabag.Api.Models
         /// <summary>
         /// Gets or sets the language identifier.
         /// </summary>
-        [JsonProperty("lang")]
+        [JsonProperty("language")]
         public string Language { get; set; }
 
         /// <summary>
