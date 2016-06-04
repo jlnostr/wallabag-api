@@ -18,24 +18,7 @@ namespace wallabag.Api
             return await ParseJsonFromStringAsync<IEnumerable<WallabagTag>>(jsonString);
         }
 
-        #region AddTagsAsync
-
-        /// <summary>
-        /// Adds tags to an item.
-        /// </summary>
-        /// <param name="itemId">The item id.</param>
-        /// <param name="tags">The tags that should be added.</param>
-        /// <returns>A list of all tags of the updated item with their specific id.</returns>
-        public Task<IEnumerable<WallabagTag>> AddTagsAsync(int itemId, string[] tags) => AddTagsAsync(itemId, tags);
-
-        /// <summary>
-        /// Adds tags to an item.
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <param name="tags">The tags that should be added.</param>
-        /// <returns>A list of all tags of the updated item with their specific id.</returns>
-        public Task<IEnumerable<WallabagTag>> AddTagsAsync(WallabagItem item, string[] tags) => AddTagsAsync(item.Id, tags);
-    
+        #region AddTagsAsync            
         /// <summary>
         /// Adds tags to an item.
         /// </summary>
@@ -90,23 +73,7 @@ namespace wallabag.Api
 
             return true;
         }
-
-        /// <summary>
-        /// Removes tags from an item.
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <param name="tags">An array of tags that should be removed.</param>
-        /// <returns>True, if the action was successful.</returns>
-        public Task<bool> RemoveTagsAsync(WallabagItem item, WallabagTag[] tags) => RemoveTagsAsync(item.Id, tags);
-   
-        /// <summary>
-        /// Removes tags from an item with a given id.
-        /// </summary>
-        /// <param name="itemId">The item id.</param>
-        /// <param name="tags">An array of tags that should be removed.</param>
-        /// <returns>True, if the action was successful.</returns>
-        public Task<bool> RemoveTagsAsync(int itemId, WallabagTag[] tags) => RemoveTagsAsync(itemId, tags);
-   
+           
         /// <summary>
         /// Removes tags from an item.
         /// </summary>

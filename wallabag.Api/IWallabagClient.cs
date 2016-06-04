@@ -46,8 +46,8 @@ namespace wallabag.Api
 
         Task<IEnumerable<WallabagTag>> AddTagsAsync(int itemId, IEnumerable<string> tags);
         Task<IEnumerable<WallabagTag>> AddTagsAsync(WallabagItem item, IEnumerable<string> tags);
-        Task<bool> RemoveTagsAsync(int itemId, WallabagTag[] tags);
-        Task<bool> RemoveTagsAsync(WallabagItem item, WallabagTag[] tags);
+        Task<bool> RemoveTagsAsync(int itemId, IEnumerable<WallabagTag> tags);
+        Task<bool> RemoveTagsAsync(WallabagItem item, IEnumerable<WallabagTag> tags);
         Task<bool> RemoveTagFromAllItemsAsync(WallabagTag tag);
     }
 }
