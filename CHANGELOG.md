@@ -1,3 +1,6 @@
+## 1.1.2
+- Fix for language code not recognized
+
 ## 1.1.1
 - Return null or false if the request failed.
 - Add ability to submit tags as type of IEnumerable.
