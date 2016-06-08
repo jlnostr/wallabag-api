@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using wallabag.Api.Models;
 using wallabag.Api.Responses;
@@ -32,7 +33,7 @@ namespace wallabag.Api
         {
             return (await GetItemsWithEnhancedMetadataAsync(IsRead, IsStarred, DateOrder, SortOrder, PageNumber, ItemsPerPage, Tags))?.Items;
         }
-        
+
         /// <summary>
         /// Returns a result of <see cref="ItemCollectionResponse"/> that contains metadata (number of pages, current page, etc.) along with the items.
         /// </summary>
@@ -83,7 +84,13 @@ namespace wallabag.Api
             }
 
             var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, requestUriSubString);
-            return await ParseJsonFromStringAsync<ItemCollectionResponse>(jsonString);
+            var response = await ParseJsonFromStringAsync<ItemCollectionResponse>(jsonString);
+
+            if (response != null)
+                foreach (var item in response.Items)
+                    CheckUriOfItem(item);
+
+            return response;
         }
 
         /// <summary>
@@ -95,7 +102,18 @@ namespace wallabag.Api
         {
             var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, $"/entries/{itemId}");
             var result = await ParseJsonFromStringAsync<WallabagItem>(jsonString);
+            CheckUriOfItem(result);
             return result;
+        }
+
+        private void CheckUriOfItem(WallabagItem item)
+        {
+            if (item?.PreviewImageUri?.IsAbsoluteUri == false)
+            {
+                var itemUri = new Uri(item.Url);
+                var itemHost = new Uri(itemUri.AbsoluteUri.Replace(itemUri.AbsolutePath, string.Empty));
+                item.PreviewImageUri = new Uri(itemHost, item.PreviewImageUri);
+            }
         }
 
         /// <summary>

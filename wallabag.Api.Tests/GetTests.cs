@@ -85,6 +85,19 @@ namespace wallabag.Api.Tests
 
         [TestMethod]
         [TestCategory("Get")]
+        public async Task AllPreviewImageUrisAreAbsolute()
+        {
+            List<WallabagItem> items = (await client.GetItemsAsync(ItemsPerPage: 999999)).ToList();
+
+            CollectionAssert.AllItemsAreUnique(items);
+            Assert.IsTrue(items.Count > 0);
+
+            foreach (var item in items)
+                Assert.IsFalse(item.PreviewImageUri?.IsAbsoluteUri == false);
+        }
+
+        [TestMethod]
+        [TestCategory("Get")]
         public async Task ExecutionOfInvalidRequestReturnsNull()
         {
             var accessToken = client.AccessToken;
