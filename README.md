@@ -1,3 +1,5 @@
+# wallabag-api [![Build status](https://ci.appveyor.com/api/projects/status/pv4q9vycbbfnswo8?svg=true)](https://ci.appveyor.com/project/jlnostr/wallabag-api)
+
 **wallabag-api** is a portable class library (PCL) that integrates the [wallabag API](http://getpocket.com/developer). An enhanced documentation can be found [in the wiki](https://github.com/jlnostr/wallabag-api/wiki).
 
 Install it using [NuGet](https://www.nuget.org/packages/wallabag.Api):
