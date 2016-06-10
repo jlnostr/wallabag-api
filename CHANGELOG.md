@@ -1,3 +1,7 @@
+## 1.1.4
+- Fix for `RemoveTagsAsync` returning true even if the request failed.
+- Fix for `GetItemsAsync` producing error 500 due to misformed request uris.
+
 ## 1.1.3
 - Fix for not absolute PreviewImageUris.
 - Option for specifiying a timeout. 
