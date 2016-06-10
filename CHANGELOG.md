@@ -1,3 +1,7 @@
+## 1.1.3
+- Fix for not absolute PreviewImageUris.
+- Option for specifiying a timeout. 
+
 ## 1.1.2
 - Fix for language code not recognized
 
