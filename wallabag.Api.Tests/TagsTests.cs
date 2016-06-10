@@ -41,6 +41,19 @@ namespace wallabag.Api.Tests
             Assert.IsTrue(modifiedItem.Tags.Count() == 0);
         }
 
+
+        [TestMethod]
+        [TestCategory("Tags")]
+        public async Task InvalidTagRemoveRequestReturnsFalse()
+        {
+            var item = (await client.GetItemsAsync()).ToList().First();
+
+            var tags = new List<WallabagTag>();
+            tags.Add(new WallabagTag() { Id = 12345, Label = "notexisting" });
+
+            Assert.IsFalse(await client.RemoveTagsAsync(item.Id, tags));
+        }
+
         /*
         [TestMethod]
         [TestCategory("Tags")]
