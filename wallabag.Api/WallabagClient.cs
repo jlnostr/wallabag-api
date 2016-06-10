@@ -58,7 +58,7 @@ namespace wallabag.Api
 
             var uriString = $"{InstanceUri}api{RelativeUriString}.json";
 
-            if (httpRequestMethod == HttpRequestMethod.Get && parameters.Count > 0)
+            if (httpRequestMethod == HttpRequestMethod.Get && parameters?.Count > 0)
             {
                 uriString += "?";
 
