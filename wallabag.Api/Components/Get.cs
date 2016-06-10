@@ -55,7 +55,6 @@ namespace wallabag.Api
            IEnumerable<string> Tags = null)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
-            var requestUriSubString = "/entries";
 
             if (IsRead != null)
                 parameters.Add("archive", ((bool)IsRead).ToInt());
@@ -72,18 +71,7 @@ namespace wallabag.Api
             if (Tags != null)
                 parameters.Add("tags", System.Net.WebUtility.HtmlEncode(Tags.ToCommaSeparatedString()));
 
-            if (parameters.Count > 0)
-            {
-                requestUriSubString += "?";
-
-                foreach (var item in parameters)
-                    requestUriSubString += $"{item.Key}={item.Value.ToString()}&";
-
-                // Remove the last ampersand (&).
-                requestUriSubString = requestUriSubString.Remove(requestUriSubString.Length - 1);
-            }
-
-            var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, requestUriSubString);
+            var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, "/entries", parameters);
             var response = await ParseJsonFromStringAsync<ItemCollectionResponse>(jsonString);
 
             if (response != null)

@@ -56,10 +56,22 @@ namespace wallabag.Api
             if (string.IsNullOrEmpty(AccessToken))
                 throw new Exception("Access token not available. Please create one using the RequestTokenAsync() method first.");
 
-            Uri requestUri = new Uri($"{InstanceUri}api{RelativeUriString}.json");
+            var uriString = $"{InstanceUri}api{RelativeUriString}.json";
 
-            var content = new StringContent(JsonConvert.SerializeObject(parameters), System.Text.Encoding.UTF8, "application/json");
+            if (httpRequestMethod == HttpRequestMethod.Get && parameters.Count > 0)
+            {
+                uriString += "?";
 
+                foreach (var item in parameters)
+                    uriString += $"{item.Key}={item.Value.ToString()}&";
+
+                // Remove the last ampersand (&).
+                uriString = uriString.Remove(uriString.Length - 1);
+            }
+
+            Uri requestUri = new Uri(uriString);
+
+           
             string httpMethodString = "GET";
             switch (httpRequestMethod)
             {
@@ -72,8 +84,8 @@ namespace wallabag.Api
             var method = new HttpMethod(httpMethodString);
             var request = new HttpRequestMessage(method, requestUri);
 
-            if (parameters != null)
-                request.Content = content;
+            if (parameters != null && httpRequestMethod != HttpRequestMethod.Get)
+                request.Content = new StringContent(JsonConvert.SerializeObject(parameters), System.Text.Encoding.UTF8, "application/json");
 
             try
             {
