@@ -61,7 +61,11 @@ namespace wallabag.Api
         {
             var lastJson = string.Empty;
             foreach (var item in tags)
+            {
                 lastJson = await ExecuteHttpRequestAsync(HttpRequestMethod.Delete, $"/entries/{itemId}/tags/{item.Id}");
+                if (lastJson == null)
+                    return false;
+            }
 
             var returnedItem = await ParseJsonFromStringAsync<WallabagItem>(lastJson);
             var itemTags = returnedItem?.Tags as List<WallabagTag>;
@@ -70,7 +74,7 @@ namespace wallabag.Api
             foreach (var item in tags)
                 if (itemTags?.Where(t => t.Label == item.Label).Count() == 1)
                     return false;
-
+            
             return true;
         }
            
