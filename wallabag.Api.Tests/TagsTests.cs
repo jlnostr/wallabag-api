@@ -24,7 +24,7 @@ namespace wallabag.Api.Tests
 
             var tags = (await client.AddTagsAsync(item, new string[] { "wallabag", "test" })).ToList();
             CollectionAssert.AllItemsAreInstancesOfType(tags, typeof(WallabagTag));
-            Assert.IsTrue(tags.Count == 2);
+            Assert.IsTrue(tags.Count >= 2);
 
             var modifiedItem = await client.GetItemAsync(item.Id);
             CollectionAssert.IsSubsetOf(tags, modifiedItem.Tags.ToList());
