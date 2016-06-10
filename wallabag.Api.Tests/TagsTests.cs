@@ -41,6 +41,7 @@ namespace wallabag.Api.Tests
             Assert.IsTrue(modifiedItem.Tags.Count() == 0);
         }
 
+        /*
         [TestMethod]
         [TestCategory("Tags")]
         public async Task TagsIsRemovedFromAllItems()
@@ -50,6 +51,6 @@ namespace wallabag.Api.Tests
 
             var items = (await client.GetItemsAsync(Tags: new string[] { tag.Label })).ToList();
             Assert.IsTrue(items.Count == 0);
-        }
+        }*/
     }
 }

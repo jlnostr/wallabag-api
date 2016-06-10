@@ -40,6 +40,7 @@ namespace wallabag.Api.Tests
             Assert.IsTrue(items.Count > 0);
         }
 
+        /*
         [TestMethod]
         [TestCategory("Get")]
         public async Task ItemsRetrievedWithSpecificTag()
@@ -66,6 +67,7 @@ namespace wallabag.Api.Tests
 
             Assert.IsTrue(items.Count > 0);
         }
+        */
 
         [TestMethod]
         [TestCategory("Get")]
