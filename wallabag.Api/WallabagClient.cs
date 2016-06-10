@@ -16,13 +16,26 @@ namespace wallabag.Api
         /// <param name="Uri">The Uri of the wallabag instance of the user.</param>
         /// <param name="ClientId">The OAuth client id of the app.</param>
         /// <param name="ClientSecret">The OAuth client secret of the app.</param>
-        public WallabagClient(Uri Uri, string ClientId, string ClientSecret)
+        /// <param name="Timeout">Number in milliseconds after the request will be cancelled.</param>
+        public WallabagClient(
+            Uri Uri,
+            string ClientId,
+            string ClientSecret,
+            int Timeout = 0)
         {
             this.InstanceUri = Uri;
             this.ClientId = ClientId;
             this.ClientSecret = ClientSecret;
 
+            if (!string.IsNullOrEmpty(AccessToken) && !string.IsNullOrEmpty(RefreshToken))
+            {
+                this.AccessToken = AccessToken;
+                this.RefreshToken = RefreshToken;
+            }
+
             this._httpClient = new HttpClient();
+            if (Timeout > 0)
+                _httpClient.Timeout = TimeSpan.FromMilliseconds(Timeout);
         }
 
         public void Dispose() => _httpClient.Dispose();
