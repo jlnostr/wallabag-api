@@ -114,7 +114,13 @@ namespace wallabag.Api
             RefreshToken = result.RefreshToken;
             LastTokenRefreshDateTime = DateTime.UtcNow;
 
+            CredentialsRefreshed?.Invoke(this, null);
             return true;
-        }
+        }      
+
+        /// <summary>
+        /// Event that will fired if <see cref="RefreshAccessTokenAsync"/> was successful.
+        /// </summary>
+        public event EventHandler CredentialsRefreshed;        
     }
 }
