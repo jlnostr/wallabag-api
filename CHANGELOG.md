@@ -1,3 +1,6 @@
+## 1.2.0
+- Add `CredentialsRefreshed`, `PreRequestExecution` and `AfterRequestExecution` events.
+
 ## 1.1.4
 - Fix for `RemoveTagsAsync` returning true even if the request failed.
 - Fix for `GetItemsAsync` producing error 500 due to misformed request uris.
