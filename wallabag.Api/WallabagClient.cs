@@ -51,6 +51,12 @@ namespace wallabag.Api
 
         protected async Task<string> ExecuteHttpRequestAsync(HttpRequestMethod httpRequestMethod, string RelativeUriString, Dictionary<string, object> parameters = default(Dictionary<string, object>))
         {
+            var args = new PreRequestExecutionEventArgs();
+            args.RequestMethod = httpRequestMethod;
+            args.RequestUriSubString = RelativeUriString;
+            args.Parameters = parameters;
+            PreRequestExecution?.Invoke(this, args);
+
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", await GetAccessTokenAsync());
 
             if (string.IsNullOrEmpty(AccessToken))
@@ -71,7 +77,7 @@ namespace wallabag.Api
 
             Uri requestUri = new Uri(uriString);
 
-           
+
             string httpMethodString = "GET";
             switch (httpRequestMethod)
             {
@@ -90,6 +96,8 @@ namespace wallabag.Api
             try
             {
                 var response = await _httpClient.SendAsync(request);
+                AfterRequestExecution?.Invoke(this, response);
+
                 if (response.IsSuccessStatusCode)
                     return await response.Content.ReadAsStringAsync();
                 else
@@ -110,6 +118,41 @@ namespace wallabag.Api
                 return Task.FromResult(default(T));
         }
 
+        /// <summary>
+        /// The type of the HTTP request.
+        /// </summary>
         public enum HttpRequestMethod { Delete, Get, Patch, Post, Put }
+
+        /// <summary>
+        /// Event that is fired before a HTTP request to the server is started.
+        /// </summary>
+        public event EventHandler<PreRequestExecutionEventArgs> PreRequestExecution;
+
+        /// <summary>
+        /// Event that is fired after the HTTP request is complete.
+        /// </summary>
+        public event EventHandler<HttpResponseMessage> AfterRequestExecution;
     }
+
+    /// <summary>
+    /// The arguments of the <see cref="WallabagClient.PreRequestExecution" /> event.
+    /// </summary>
+    public class PreRequestExecutionEventArgs
+    {
+        /// <summary>
+        /// The substring that will attached to the <see cref="WallabagClient.InstanceUri"/> to perform a certain HTTP request.
+        /// </summary>
+        public string RequestUriSubString { get; set; }
+
+        /// <summary>
+        /// The type of the HTTP request.
+        /// </summary>
+        public WallabagClient.HttpRequestMethod RequestMethod { get; set; }
+
+        /// <summary>
+        /// Any parameters that are going to be submitted along with the request, e.g. the URL of a new item.
+        /// </summary>
+        public Dictionary<string, object> Parameters { get; set; }
+    }
+
 }
