@@ -36,6 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -52,6 +53,7 @@
   <ItemGroup>
     <Compile Include="AddTests.cs" />
     <Compile Include="AssertExtensions.cs" />
+    <Compile Include="EventTests.cs" />
     <Compile Include="AuthenticationTests.cs" />
     <Compile Include="Credentials.cs" />
     <Compile Include="GeneralTests.cs" />
@@ -66,6 +68,9 @@
       <Project>{c11e20d9-e78f-4853-9b58-dbe51740253f}</Project>
       <Name>wallabag.Api</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
