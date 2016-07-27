@@ -9,7 +9,7 @@ namespace wallabag.Api.Tests
     {
         [TestMethod]
         [TestCategory("Events")]
-        public async Task CredentialsRefreshedEventIsFiredCorrect()
+        public void CredentialsRefreshedEventIsFiredCorrect()
         {
             var oldAccessToken = client.AccessToken;
             var oldRefreshToken = client.RefreshToken;
