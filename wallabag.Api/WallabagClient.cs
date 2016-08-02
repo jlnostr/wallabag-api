@@ -9,6 +9,7 @@ namespace wallabag.Api
     public partial class WallabagClient : IWallabagClient
     {
         private HttpClient _httpClient;
+        private bool _fireHtmlExceptions;
 
         /// <summary>
         /// Initializes a new instance of WallabagClient.
@@ -17,11 +18,13 @@ namespace wallabag.Api
         /// <param name="clientId">The OAuth client id of the app.</param>
         /// <param name="clientSecret">The OAuth client secret of the app.</param>
         /// <param name="timeout">Number in milliseconds after the request will be cancelled.</param>
+        /// <param name="fireHtmlExceptions">Value that indicates if exceptions from type <see cref="HttpRequestException"/> should be thrown.</param>
         public WallabagClient(
             Uri uri,
             string clientId,
             string clientSecret,
-            int timeout = 0)
+            int timeout = 0,
+            bool fireHtmlExceptions = false)
         {
             this.InstanceUri = uri;
             this.ClientId = clientId;
@@ -36,6 +39,8 @@ namespace wallabag.Api
             this._httpClient = new HttpClient();
             if (timeout > 0)
                 _httpClient.Timeout = TimeSpan.FromMilliseconds(timeout);
+
+            this._fireHtmlExceptions = fireHtmlExceptions;
         }
 
         public void Dispose() => _httpClient.Dispose();
@@ -103,9 +108,13 @@ namespace wallabag.Api
                 else
                     return null;
             }
-            catch (Exception e)
+            catch (HttpRequestException e)
             {
                 System.Diagnostics.Debug.WriteLine("[FAILURE] [wallabag-api] An error occured during the request: " + e.Message);
+
+                if (_fireHtmlExceptions)
+                    throw e;
+
                 return null;
             }
         }
