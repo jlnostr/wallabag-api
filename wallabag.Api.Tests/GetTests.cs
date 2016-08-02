@@ -32,7 +32,7 @@ namespace wallabag.Api.Tests
         [TestCategory("Get")]
         public async Task ItemsRetrievedWithOneFilter()
         {
-            List<WallabagItem> items = (await client.GetItemsAsync(IsRead: true)).ToList();
+            List<WallabagItem> items = (await client.GetItemsAsync(isRead: true)).ToList();
 
             foreach (var item in items)
                 Assert.IsTrue(item.IsRead);
@@ -73,10 +73,10 @@ namespace wallabag.Api.Tests
         [TestCategory("Get")]
         public async Task ItemsRetrievedWithMultipleFilters()
         {
-            List<WallabagItem> items = (await client.GetItemsAsync(IsRead: true,
-                IsStarred: false,
-                PageNumber: 1,
-                ItemsPerPage: 1)).ToList();
+            List<WallabagItem> items = (await client.GetItemsAsync(isRead: true,
+                isStarred: false,
+                pageNumber: 1,
+                itemsPerPage: 1)).ToList();
 
             var firstItem = items.First();
 
@@ -89,7 +89,7 @@ namespace wallabag.Api.Tests
         [TestCategory("Get")]
         public async Task AllPreviewImageUrisAreAbsolute()
         {
-            List<WallabagItem> items = (await client.GetItemsAsync(ItemsPerPage: 999999)).ToList();
+            List<WallabagItem> items = (await client.GetItemsAsync(itemsPerPage: 999999)).ToList();
 
             CollectionAssert.AllItemsAreUnique(items);
             Assert.IsTrue(items.Count > 0);
@@ -111,10 +111,10 @@ namespace wallabag.Api.Tests
             var singleItem = await client.GetItemAsync(1337);
             Assert.IsNull(singleItem);
 
-            var multipleItems = await client.GetItemsAsync(ItemsPerPage: 1337);
+            var multipleItems = await client.GetItemsAsync(itemsPerPage: 1337);
             Assert.IsNull(multipleItems);
 
-            var multipleItemsWithMetadata = await client.GetItemsWithEnhancedMetadataAsync(ItemsPerPage: 1337);
+            var multipleItemsWithMetadata = await client.GetItemsWithEnhancedMetadataAsync(itemsPerPage: 1337);
             Assert.IsNull(multipleItemsWithMetadata);
 
             var unarchivedItem = await client.UnarchiveAsync(1337);

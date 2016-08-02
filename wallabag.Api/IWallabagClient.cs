@@ -23,13 +23,13 @@ namespace wallabag.Api
         Task<WallabagItem> AddAsync(Uri uri, IEnumerable<string> tags = null, string title = null);
 
         Task<IEnumerable<WallabagItem>> GetItemsAsync(
-            bool? IsRead = null,
-            bool? IsStarred = null,
-            WallabagDateOrder? DateOrder = null,
-            WallabagSortOrder? SortOrder = null,
-            int? PageNumber = null,
-            int? ItemsPerPage = null,
-            IEnumerable<string> Tags = null);
+            bool? isRead = null,
+            bool? isStarred = null,
+            WallabagDateOrder? dateOrder = null,
+            WallabagSortOrder? sortOrder = null,
+            int? pageNumber = null,
+            int? itemsPerPage = null,
+            IEnumerable<string> tags = null);
         Task<WallabagItem> GetItemAsync(int itemId);
         Task<IEnumerable<WallabagTag>> GetTagsAsync();
 

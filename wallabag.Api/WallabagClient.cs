@@ -13,19 +13,19 @@ namespace wallabag.Api
         /// <summary>
         /// Initializes a new instance of WallabagClient.
         /// </summary>
-        /// <param name="Uri">The Uri of the wallabag instance of the user.</param>
-        /// <param name="ClientId">The OAuth client id of the app.</param>
-        /// <param name="ClientSecret">The OAuth client secret of the app.</param>
-        /// <param name="Timeout">Number in milliseconds after the request will be cancelled.</param>
+        /// <param name="uri">The Uri of the wallabag instance of the user.</param>
+        /// <param name="clientId">The OAuth client id of the app.</param>
+        /// <param name="clientSecret">The OAuth client secret of the app.</param>
+        /// <param name="timeout">Number in milliseconds after the request will be cancelled.</param>
         public WallabagClient(
-            Uri Uri,
-            string ClientId,
-            string ClientSecret,
-            int Timeout = 0)
+            Uri uri,
+            string clientId,
+            string clientSecret,
+            int timeout = 0)
         {
-            this.InstanceUri = Uri;
-            this.ClientId = ClientId;
-            this.ClientSecret = ClientSecret;
+            this.InstanceUri = uri;
+            this.ClientId = clientId;
+            this.ClientSecret = clientSecret;
 
             if (!string.IsNullOrEmpty(AccessToken) && !string.IsNullOrEmpty(RefreshToken))
             {
@@ -34,8 +34,8 @@ namespace wallabag.Api
             }
 
             this._httpClient = new HttpClient();
-            if (Timeout > 0)
-                _httpClient.Timeout = TimeSpan.FromMilliseconds(Timeout);
+            if (timeout > 0)
+                _httpClient.Timeout = TimeSpan.FromMilliseconds(timeout);
         }
 
         public void Dispose() => _httpClient.Dispose();
@@ -49,11 +49,11 @@ namespace wallabag.Api
             return await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<string>(jsonString));
         }
 
-        protected async Task<string> ExecuteHttpRequestAsync(HttpRequestMethod httpRequestMethod, string RelativeUriString, Dictionary<string, object> parameters = default(Dictionary<string, object>))
+        protected async Task<string> ExecuteHttpRequestAsync(HttpRequestMethod httpRequestMethod, string relativeUriString, Dictionary<string, object> parameters = default(Dictionary<string, object>))
         {
             var args = new PreRequestExecutionEventArgs();
             args.RequestMethod = httpRequestMethod;
-            args.RequestUriSubString = RelativeUriString;
+            args.RequestUriSubString = relativeUriString;
             args.Parameters = parameters;
             PreRequestExecution?.Invoke(this, args);
 
@@ -62,7 +62,7 @@ namespace wallabag.Api
             if (string.IsNullOrEmpty(AccessToken))
                 throw new Exception("Access token not available. Please create one using the RequestTokenAsync() method first.");
 
-            var uriString = $"{InstanceUri}api{RelativeUriString}.json";
+            var uriString = $"{InstanceUri}api{relativeUriString}.json";
 
             if (httpRequestMethod == HttpRequestMethod.Get && parameters?.Count > 0)
             {

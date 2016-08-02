@@ -14,62 +14,62 @@ namespace wallabag.Api
         /// <summary>
         /// Returns a list of items filtered by given parameters.
         /// </summary>
-        /// <param name="IsRead">Indicates if the item is read (archived) or not.</param>
-        /// <param name="IsStarred">Indicates if the item is starred.</param>
-        /// <param name="DateOrder">Sort order, in which the items should be returned. Can be <see cref="WallabagDateOrder.ByCreationDate"/> or <see cref="WallabagDateOrder.ByLastModificationDate"/>.</param>
-        /// <param name="SortOrder">"Classic" sort order, ascending or descending.</param>
-        /// <param name="PageNumber">Number of page.</param>
-        /// <param name="ItemsPerPage">Number of items per page.</param>
-        /// <param name="Tags">An array of tags that applies to all items.</param>
+        /// <param name="isRead">Indicates if the item is read (archived) or not.</param>
+        /// <param name="isStarred">Indicates if the item is starred.</param>
+        /// <param name="dateOrder">Sort order, in which the items should be returned. Can be <see cref="WallabagDateOrder.ByCreationDate"/> or <see cref="WallabagDateOrder.ByLastModificationDate"/>.</param>
+        /// <param name="sortOrder">"Classic" sort order, ascending or descending.</param>
+        /// <param name="pageNumber">Number of page.</param>
+        /// <param name="itemsPerPage">Number of items per page.</param>
+        /// <param name="tags">An array of tags that applies to all items.</param>
         /// <returns></returns>
         public async Task<IEnumerable<WallabagItem>> GetItemsAsync(
-            bool? IsRead = null,
-            bool? IsStarred = null,
-            WallabagDateOrder? DateOrder = null,
-            WallabagSortOrder? SortOrder = null,
-            int? PageNumber = null,
-            int? ItemsPerPage = null,
-            IEnumerable<string> Tags = null)
+            bool? isRead = null,
+            bool? isStarred = null,
+            WallabagDateOrder? dateOrder = null,
+            WallabagSortOrder? sortOrder = null,
+            int? pageNumber = null,
+            int? itemsPerPage = null,
+            IEnumerable<string> tags = null)
         {
-            return (await GetItemsWithEnhancedMetadataAsync(IsRead, IsStarred, DateOrder, SortOrder, PageNumber, ItemsPerPage, Tags))?.Items;
+            return (await GetItemsWithEnhancedMetadataAsync(isRead, isStarred, dateOrder, sortOrder, pageNumber, itemsPerPage, tags))?.Items;
         }
 
         /// <summary>
         /// Returns a result of <see cref="ItemCollectionResponse"/> that contains metadata (number of pages, current page, etc.) along with the items.
         /// </summary>
-        /// <param name="IsRead">Indicates if the item is read (archived) or not.</param>
-        /// <param name="IsStarred">Indicates if the item is starred.</param>
-        /// <param name="DateOrder">Sort order, in which the items should be returned. Can be <see cref="WallabagDateOrder.ByCreationDate"/> or <see cref="WallabagDateOrder.ByLastModificationDate"/>.</param>
-        /// <param name="SortOrder">"Classic" sort order, ascending or descending.</param>
-        /// <param name="PageNumber">Number of page.</param>
-        /// <param name="ItemsPerPage">Number of items per page.</param>
-        /// <param name="Tags">An array of tags that applies to all items.</param>
+        /// <param name="isRead">Indicates if the item is read (archived) or not.</param>
+        /// <param name="isStarred">Indicates if the item is starred.</param>
+        /// <param name="dateOrder">Sort order, in which the items should be returned. Can be <see cref="WallabagDateOrder.ByCreationDate"/> or <see cref="WallabagDateOrder.ByLastModificationDate"/>.</param>
+        /// <param name="sortOrder">"Classic" sort order, ascending or descending.</param>
+        /// <param name="pageNumber">Number of page.</param>
+        /// <param name="itemsPerPage">Number of items per page.</param>
+        /// <param name="tags">An array of tags that applies to all items.</param>
         /// <returns></returns>
         public async Task<ItemCollectionResponse> GetItemsWithEnhancedMetadataAsync(
-            bool? IsRead = null,
-            bool? IsStarred = null,
-            WallabagDateOrder? DateOrder = null,
-            WallabagSortOrder? SortOrder = null,
-            int? PageNumber = null,
-            int? ItemsPerPage = null,
-           IEnumerable<string> Tags = null)
+            bool? isRead = null,
+            bool? isStarred = null,
+            WallabagDateOrder? dateOrder = null,
+            WallabagSortOrder? sortOrder = null,
+            int? pageNumber = null,
+            int? itemsPerPage = null,
+           IEnumerable<string> tags = null)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-            if (IsRead != null)
-                parameters.Add("archive", ((bool)IsRead).ToInt());
-            if (IsStarred != null)
-                parameters.Add("starred", ((bool)IsStarred).ToInt());
-            if (DateOrder != null)
-                parameters.Add("sort", (DateOrder == WallabagDateOrder.ByCreationDate ? "created" : "updated"));
-            if (SortOrder != null)
-                parameters.Add("order", (SortOrder == WallabagSortOrder.Ascending ? "asc" : "desc"));
-            if (PageNumber != null)
-                parameters.Add("page", PageNumber);
-            if (ItemsPerPage != null)
-                parameters.Add("perPage", ItemsPerPage);
-            if (Tags != null)
-                parameters.Add("tags", System.Net.WebUtility.HtmlEncode(Tags.ToCommaSeparatedString()));
+            if (isRead != null)
+                parameters.Add("archive", ((bool)isRead).ToInt());
+            if (isStarred != null)
+                parameters.Add("starred", ((bool)isStarred).ToInt());
+            if (dateOrder != null)
+                parameters.Add("sort", (dateOrder == WallabagDateOrder.ByCreationDate ? "created" : "updated"));
+            if (sortOrder != null)
+                parameters.Add("order", (sortOrder == WallabagSortOrder.Ascending ? "asc" : "desc"));
+            if (pageNumber != null)
+                parameters.Add("page", pageNumber);
+            if (itemsPerPage != null)
+                parameters.Add("perPage", itemsPerPage);
+            if (tags != null)
+                parameters.Add("tags", System.Net.WebUtility.HtmlEncode(tags.ToCommaSeparatedString()));
 
             var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, "/entries", parameters);
             var response = await ParseJsonFromStringAsync<ItemCollectionResponse>(jsonString);
