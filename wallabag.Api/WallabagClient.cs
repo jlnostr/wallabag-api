@@ -9,7 +9,20 @@ namespace wallabag.Api
     public partial class WallabagClient : IWallabagClient
     {
         private HttpClient _httpClient;
-        private bool _fireHtmlExceptions;
+
+        /// <summary>
+        /// Gets or sets if exceptions should be thrown.
+        /// </summary>
+        public bool FireHtmlExceptions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the timeout in milliseconds for each HTTP request.
+        /// </summary>
+        public int Timeout
+        {
+            get { return (int)_httpClient.Timeout.TotalMilliseconds; }
+            set { _httpClient.Timeout = TimeSpan.FromMilliseconds(value); }
+        }
 
         /// <summary>
         /// Initializes a new instance of WallabagClient.
@@ -18,7 +31,7 @@ namespace wallabag.Api
         /// <param name="clientId">The OAuth client id of the app.</param>
         /// <param name="clientSecret">The OAuth client secret of the app.</param>
         /// <param name="timeout">Number in milliseconds after the request will be cancelled.</param>
-        /// <param name="fireHtmlExceptions">Value that indicates if exceptions from type <see cref="HttpRequestException"/> should be thrown.</param>
+        /// <param name="fireHtmlExceptions">Value that indicates if exceptions should be thrown.</param>
         public WallabagClient(
             Uri uri,
             string clientId,
@@ -37,10 +50,8 @@ namespace wallabag.Api
             }
 
             this._httpClient = new HttpClient();
-            if (timeout > 0)
-                _httpClient.Timeout = TimeSpan.FromMilliseconds(timeout);
-
-            this._fireHtmlExceptions = fireHtmlExceptions;
+            this.Timeout = timeout;
+            this.FireHtmlExceptions = fireHtmlExceptions;
         }
 
         public void Dispose() => _httpClient.Dispose();
@@ -112,7 +123,7 @@ namespace wallabag.Api
             {
                 System.Diagnostics.Debug.WriteLine("[FAILURE] [wallabag-api] An error occured during the request: " + e.Message);
 
-                if (_fireHtmlExceptions)
+                if (FireHtmlExceptions)
                     throw e;
 
                 return null;
