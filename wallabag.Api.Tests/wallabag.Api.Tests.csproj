@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="AddTests.cs" />
     <Compile Include="AssertExtensions.cs" />
+    <Compile Include="ExceptionTests.cs" />
     <Compile Include="EventTests.cs" />
     <Compile Include="AuthenticationTests.cs" />
     <Compile Include="Credentials.cs" />
