@@ -17,6 +17,9 @@ namespace wallabag.Api.Tests
 
             client.CredentialsRefreshed += (s, e) =>
             {
+                Assert.IsNotNull(client.AccessToken);
+                Assert.IsNotNull(client.RefreshToken);
+                Assert.IsNotNull(client.LastTokenRefreshDateTime);
                 Assert.AreNotEqual(oldAccessToken, client.AccessToken);
                 Assert.AreNotEqual(oldRefreshToken, client.RefreshToken);
                 Assert.AreNotEqual(oldRefreshDateTime, client.LastTokenRefreshDateTime);

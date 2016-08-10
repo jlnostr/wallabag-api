@@ -11,11 +11,14 @@ namespace wallabag.Api.Tests
         WallabagClient client;
 
         [TestInitialize]
-        public void InitializeUnitTests()
+        public async void InitializeUnitTests()
         {
             client = new WallabagClient(new Uri(wallabagUrl), clientId, clientSecret);
-            var task = client.RequestTokenAsync(username, password);
-            task.Wait();
+
+            client.Timeout = 500;
+            client.RefreshToken = "12345";
+            client.AccessToken = "12345";
+            client.LastTokenRefreshDateTime = DateTime.Now;
         }
 
         [TestMethod]
