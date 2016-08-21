@@ -50,7 +50,8 @@ namespace wallabag.Api
             }
 
             this._httpClient = new HttpClient();
-            this.Timeout = timeout;
+            if (timeout > 0)
+                this.Timeout = timeout;
             this.FireHtmlExceptions = fireHtmlExceptions;
         }
 
