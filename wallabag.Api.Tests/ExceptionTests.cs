@@ -8,14 +8,14 @@ namespace wallabag.Api.Tests
     {
         [TestMethod]
         [TestCategory("Exceptions")]
+        [ExpectedException(typeof(TaskCanceledException))]
         public async Task ExceptionIsThrownWhenTimeoutIsReached()
         {
-            var previousTimeout = client.Timeout;
-            client.Timeout = 5;
-            
-            await AssertExtensions.ThrowsExceptionAsync<TimeoutException>(async () => await client.RefreshAccessTokenAsync());
+            this.client = client.WithTimeout(5);
 
-            client.Timeout = previousTimeout;
+            await client.RefreshAccessTokenAsync();
+
+            this.client = client.WithTimeout(100000);
         }
     }
 }
