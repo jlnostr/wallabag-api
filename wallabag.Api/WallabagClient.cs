@@ -16,13 +16,9 @@ namespace wallabag.Api
         public bool FireHtmlExceptions { get; set; }
 
         /// <summary>
-        /// Gets or sets the timeout in milliseconds for each HTTP request.
+        /// Gets the timeout in milliseconds for each HTTP request.
         /// </summary>
-        public int Timeout
-        {
-            get { return (int)_httpClient.Timeout.TotalMilliseconds; }
-            set { _httpClient.Timeout = TimeSpan.FromMilliseconds(value); }
-        }
+        public TimeSpan Timeout => _httpClient.Timeout;
 
         /// <summary>
         /// Initializes a new instance of WallabagClient.
@@ -51,7 +47,8 @@ namespace wallabag.Api
 
             this._httpClient = new HttpClient();
             if (timeout > 0)
-                this.Timeout = timeout;
+                this._httpClient.Timeout = TimeSpan.FromMilliseconds(timeout);
+
             this.FireHtmlExceptions = fireHtmlExceptions;
         }
 
