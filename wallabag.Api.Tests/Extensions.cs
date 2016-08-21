@@ -48,4 +48,17 @@ namespace wallabag.Api.Tests
             throw new AssertFailedException(string.Format(CultureInfo.CurrentCulture, "Failed.", UnitTestOutcome.Failed, objArray2));
         }
     }
+
+    public static class WallabagClientExtensions
+    {
+        public static WallabagClient WithTimeout(this WallabagClient client, int timeout)
+        {
+            return new WallabagClient(client.InstanceUri, client.ClientId, client.ClientSecret, timeout, client.FireHtmlExceptions)
+            {
+                AccessToken = client.AccessToken,
+                LastTokenRefreshDateTime = client.LastTokenRefreshDateTime,
+                RefreshToken = client.RefreshToken
+            };
+        }
+    }
 }
