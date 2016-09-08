@@ -29,6 +29,7 @@ namespace wallabag.Api
             WallabagSortOrder? sortOrder = null,
             int? pageNumber = null,
             int? itemsPerPage = null,
+            DateTime? since = null,
             IEnumerable<string> tags = null);
         Task<WallabagItem> GetItemAsync(int itemId);
         Task<IEnumerable<WallabagTag>> GetTagsAsync();
@@ -49,5 +50,17 @@ namespace wallabag.Api
         Task<bool> RemoveTagsAsync(int itemId, IEnumerable<WallabagTag> tags);
         Task<bool> RemoveTagsAsync(WallabagItem item, IEnumerable<WallabagTag> tags);
         Task<bool> RemoveTagFromAllItemsAsync(WallabagTag tag);
+        Task<bool> RemoveTagFromAllItemsAsync(string tag);
+        Task<bool> RemoveTagsFromAllItemsAsync(IEnumerable<WallabagTag> tags);
+        Task<bool> RemoveTagsFromAllItemsAsync(IEnumerable<string> tags);
+
+        Task<IEnumerable<WallabagAnnotation>> GetAnnotationsAsync(WallabagItem item);
+        Task<IEnumerable<WallabagAnnotation>> GetAnnotationsAsync(int itemId);
+        Task<bool> AddAnnotationAsync(WallabagItem item, WallabagAnnotation annotation);
+        Task<bool> AddAnnotationAsync(int itemId, WallabagAnnotation annotation);
+        Task<bool> UpdateAnnotationAsync(WallabagAnnotation oldAnnotation, WallabagAnnotation newAnnotation);
+        Task<bool> UpdateAnnotationAsync(string oldAnnotationId, WallabagAnnotation newAnnotation);
+        Task<bool> DeleteAnnotationAsync(WallabagAnnotation annotation);
+        Task<bool> DeleteAnnotationAsync(string annotationId);
     }
 }
