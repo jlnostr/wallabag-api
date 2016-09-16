@@ -20,6 +20,7 @@ namespace wallabag.Api
         /// <param name="sortOrder">"Classic" sort order, ascending or descending.</param>
         /// <param name="pageNumber">Number of page.</param>
         /// <param name="itemsPerPage">Number of items per page.</param>
+        /// <param name="since">Minimum timestamp that items should have. Requires wallabag 2.1.</param>
         /// <param name="tags">An array of tags that applies to all items.</param>
         /// <returns></returns>
         public async Task<IEnumerable<WallabagItem>> GetItemsAsync(
@@ -29,9 +30,10 @@ namespace wallabag.Api
             WallabagSortOrder? sortOrder = null,
             int? pageNumber = null,
             int? itemsPerPage = null,
+            DateTime? since = null,
             IEnumerable<string> tags = null)
         {
-            return (await GetItemsWithEnhancedMetadataAsync(isRead, isStarred, dateOrder, sortOrder, pageNumber, itemsPerPage, tags))?.Items;
+            return (await GetItemsWithEnhancedMetadataAsync(isRead, isStarred, dateOrder, sortOrder, pageNumber, itemsPerPage, since, tags))?.Items;
         }
 
         /// <summary>
@@ -42,8 +44,8 @@ namespace wallabag.Api
         /// <param name="dateOrder">Sort order, in which the items should be returned. Can be <see cref="WallabagDateOrder.ByCreationDate"/> or <see cref="WallabagDateOrder.ByLastModificationDate"/>.</param>
         /// <param name="sortOrder">"Classic" sort order, ascending or descending.</param>
         /// <param name="pageNumber">Number of page.</param>
-        /// <param name="itemsPerPage">Number of items per page.</param>
-        /// <param name="tags">An array of tags that applies to all items.</param>
+        /// <param name="itemsPerPage">Number of items per page.</param>       
+        /// <param name="tags">An array of tags that applies to all items.</param>   
         /// <returns></returns>
         public async Task<ItemCollectionResponse> GetItemsWithEnhancedMetadataAsync(
             bool? isRead = null,
@@ -52,6 +54,7 @@ namespace wallabag.Api
             WallabagSortOrder? sortOrder = null,
             int? pageNumber = null,
             int? itemsPerPage = null,
+            DateTime? since = null,
            IEnumerable<string> tags = null)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -68,6 +71,7 @@ namespace wallabag.Api
                 parameters.Add("page", pageNumber);
             if (itemsPerPage != null)
                 parameters.Add("perPage", itemsPerPage);
+            // TODO: Add implementation for since parameter
             if (tags != null)
                 parameters.Add("tags", System.Net.WebUtility.HtmlEncode(tags.ToCommaSeparatedString()));
 
