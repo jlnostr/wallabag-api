@@ -99,8 +99,9 @@ namespace wallabag.Api
             return true;
         }
 
-
-
-     
+        // TODO: Add support.
+        public async Task<bool> RemoveTagFromAllItemsAsync(string tag) => false;
+        public async Task<bool> RemoveTagsFromAllItemsAsync(IEnumerable<WallabagTag> tags) => false;
+        public async Task<bool> RemoveTagsFromAllItemsAsync(IEnumerable<string> tags) => false;
     }
 }
