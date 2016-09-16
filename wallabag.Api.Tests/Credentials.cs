@@ -8,12 +8,12 @@ namespace wallabag.Api.Tests
 {
     public static class Credentials
     {
-        // Enter your own credentials here.
+        // Enter your own credentials here or use the sample data below.
 
         public const string wallabagUrl = "https://wallabag.jlnostr.de";
         public const string username = "unit-testing";
         public const string password = "unit-testing";
-        public const string clientId = "1_4xy4khl22uck0o8gcs4kw4cwg80s88os0kw0k4so4ssg804ogk";
-        public const string clientSecret = "5wakw2t7uxkwsww480swooow8gsgko8w40wso0w8c4gocsc4ws";
+        public const string clientId = "2_1881siitlw4gkggo0s4wo4cw04kcw0wc404wc8k8ocwocosok8";
+        public const string clientSecret = "56lgxc9lx5kw8kowgwcko4wcok448ck804sc0400kckw444wwk";
     }
 }
