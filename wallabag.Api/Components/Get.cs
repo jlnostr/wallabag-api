@@ -20,7 +20,7 @@ namespace wallabag.Api
         /// <param name="sortOrder">"Classic" sort order, ascending or descending.</param>
         /// <param name="pageNumber">Number of page.</param>
         /// <param name="itemsPerPage">Number of items per page.</param>
-        /// <param name="since">Minimum timestamp that items should have. Requires wallabag 2.1.</param>
+        /// <param name="since">Minimum timestamp that the creation date should have. Requires wallabag 2.1.</param>
         /// <param name="tags">An array of tags that applies to all items.</param>
         /// <returns></returns>
         public async Task<IEnumerable<WallabagItem>> GetItemsAsync(
@@ -45,6 +45,7 @@ namespace wallabag.Api
         /// <param name="sortOrder">"Classic" sort order, ascending or descending.</param>
         /// <param name="pageNumber">Number of page.</param>
         /// <param name="itemsPerPage">Number of items per page.</param>       
+        /// <param name="since">Minimum timestamp that the creation date should have. Requires wallabag 2.1.</param>
         /// <param name="tags">An array of tags that applies to all items.</param>   
         /// <returns></returns>
         public async Task<ItemCollectionResponse> GetItemsWithEnhancedMetadataAsync(
@@ -71,7 +72,8 @@ namespace wallabag.Api
                 parameters.Add("page", pageNumber);
             if (itemsPerPage != null)
                 parameters.Add("perPage", itemsPerPage);
-            // TODO: Add implementation for since parameter
+            if (since != null && (await GetVersionNumberAsync()).Contains("2.1"))
+                parameters.Add("since", since.Value.Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
             if (tags != null)
                 parameters.Add("tags", System.Net.WebUtility.HtmlEncode(tags.ToCommaSeparatedString()));
 
