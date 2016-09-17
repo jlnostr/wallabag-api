@@ -89,6 +89,10 @@ namespace wallabag.Api.Tests
         [TestMethod, TestCategory("Get")]
         public async Task ItemsRetrievedWithSinceParameter()
         {
+            var version = await client.GetVersionNumberAsync();
+            if (version.Contains("2.1") == false)
+                return;
+
             var referenceDateTime = new DateTime(2016, 09, 01);
 
             List<WallabagItem> items = (await client.GetItemsAsync(since: referenceDateTime)).ToList();
