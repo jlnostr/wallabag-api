@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -83,6 +84,20 @@ namespace wallabag.Api.Tests
             Assert.IsTrue(items.Count == 1);
             Assert.IsTrue(firstItem.IsStarred == false);
             Assert.IsTrue(firstItem.IsRead == true);
+        }
+
+        [TestMethod, TestCategory("Get")]
+        public async Task ItemsRetrievedWithSinceParameter()
+        {
+            var referenceDateTime = new DateTime(2016, 09, 01);
+
+            List<WallabagItem> items = (await client.GetItemsAsync(since: referenceDateTime)).ToList();
+
+            var firstItem = items.First();
+
+            Assert.IsTrue(firstItem.CreationDate > referenceDateTime);
+            foreach (var item in items)
+                Assert.IsTrue(item.CreationDate > referenceDateTime);
         }
 
         [TestMethod]
