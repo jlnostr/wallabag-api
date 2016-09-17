@@ -17,9 +17,9 @@ namespace wallabag.Api
         public async Task<bool> AddAnnotationAsync(int itemId, WallabagAnnotation annotation) => false;
 
         public Task<bool> UpdateAnnotationAsync(WallabagAnnotation oldAnnotation, WallabagAnnotation newAnnotation) => UpdateAnnotationAsync(oldAnnotation.Id, newAnnotation);
-        public async Task<bool> UpdateAnnotationAsync(string oldAnnotationId, WallabagAnnotation newAnnotation) => false;
+        public async Task<bool> UpdateAnnotationAsync(int oldAnnotationId, WallabagAnnotation newAnnotation) => false;
 
         public Task<bool> DeleteAnnotationAsync(WallabagAnnotation annotation) => DeleteAnnotationAsync(annotation.Id);
-        public async Task<bool> DeleteAnnotationAsync(string annotationId) => false;
+        public async Task<bool> DeleteAnnotationAsync(int annotationId) => false;
     }
 }
