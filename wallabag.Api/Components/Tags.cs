@@ -74,10 +74,10 @@ namespace wallabag.Api
             foreach (var item in tags)
                 if (itemTags?.Where(t => t.Label == item.Label).Count() == 1)
                     return false;
-            
+
             return true;
         }
-           
+
         /// <summary>
         /// Removes tags from an item.
         /// </summary>
@@ -93,15 +93,37 @@ namespace wallabag.Api
         /// </summary>
         /// <param name="tag">The tag that should be deleted.</param>
         /// <returns>True, if the action was successful.</returns>
-        public async Task<bool> RemoveTagFromAllItemsAsync(WallabagTag tag)
-        {
-            await ExecuteHttpRequestAsync(HttpRequestMethod.Delete, $"/tags/{tag.Id}");
-            return true;
-        }
+        public Task<bool> RemoveTagFromAllItemsAsync(WallabagTag tag)
+            => RemoveTagFromAllItemsAsync(tag.Label);
 
-        // TODO: Add support.
-        public async Task<bool> RemoveTagFromAllItemsAsync(string tag) => false;
-        public async Task<bool> RemoveTagsFromAllItemsAsync(IEnumerable<WallabagTag> tags) => false;
-        public async Task<bool> RemoveTagsFromAllItemsAsync(IEnumerable<string> tags) => false;
+        /// <summary>
+        /// Removes a tag from all items.
+        /// </summary>
+        /// <param name="tag">The tag that should be deleted.</param>
+        /// <returns>True, if the action was successful.</returns>
+        public async Task<bool> RemoveTagFromAllItemsAsync(string tag)
+            => await ExecuteHttpRequestAsync(HttpRequestMethod.Delete, $"/tags/{tag}") != null;
+
+        /// <summary>
+        /// Removes one or more tags from all items.
+        /// </summary>
+        /// <param name="tags">A list with all the tags that should be deleted.</param>
+        /// <returns>True, if the action was successful.</returns>
+        public Task<bool> RemoveTagsFromAllItemsAsync(IEnumerable<WallabagTag> tags)
+            => RemoveTagsFromAllItemsAsync(tags.ToCommaSeparatedString().Split(","[0]));
+
+        /// <summary>
+        /// Removes one or more tags from all items.
+        /// </summary>
+        /// <param name="tags">A list with all the tags that should be deleted.</param>
+        /// <returns>True, if the action was successful.</returns>
+        public async Task<bool> RemoveTagsFromAllItemsAsync(IEnumerable<string> tags)
+        {
+            return await ExecuteHttpRequestAsync(HttpRequestMethod.Delete, $"/tags/label",
+                new Dictionary<string, object>()
+                {
+                    ["tags"] = tags.ToCommaSeparatedString()
+                }) != null;
+        }
     }
 }
