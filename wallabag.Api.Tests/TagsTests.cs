@@ -54,16 +54,31 @@ namespace wallabag.Api.Tests
             Assert.IsFalse(await client.RemoveTagsAsync(item.Id, tags));
         }
 
-        /*
+
         [TestMethod]
         [TestCategory("Tags")]
-        public async Task TagsIsRemovedFromAllItems()
+        public async Task TagIsRemovedFromAllItems()
         {
             var tag = (await client.GetTagsAsync()).First();
             Assert.IsTrue(await client.RemoveTagFromAllItemsAsync(tag));
 
-            var items = (await client.GetItemsAsync(Tags: new string[] { tag.Label })).ToList();
+            var items = (await client.GetItemsAsync(tags: new string[] { tag.Label })).ToList();
             Assert.IsTrue(items.Count == 0);
-        }*/
+        }
+
+        [TestMethod]
+        [TestCategory("Tags")]
+        public async Task TagsAreRemovedFromAllItems()
+        {
+            var testTags = (await client.GetTagsAsync()).Take(2);
+            var testTagsStringArray = testTags.ToCommaSeparatedString().Split(","[0]);
+
+            var previousItems = (await client.GetItemsAsync(tags: testTagsStringArray)).ToList();
+
+            Assert.IsTrue(await client.RemoveTagsFromAllItemsAsync(testTags));
+
+            var newItems = (await client.GetItemsAsync(tags: testTagsStringArray)).ToList();
+            Assert.IsTrue(newItems.Count == 0);        
+        }
     }
 }
