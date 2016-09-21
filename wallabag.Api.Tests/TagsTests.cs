@@ -59,26 +59,32 @@ namespace wallabag.Api.Tests
         [TestCategory("Tags")]
         public async Task TagIsRemovedFromAllItems()
         {
-            var tag = (await client.GetTagsAsync()).First();
-            Assert.IsTrue(await client.RemoveTagFromAllItemsAsync(tag));
+            if (await client.VersionEqualsAsync("2.1"))
+            {
+                var tag = (await client.GetTagsAsync()).First();
+                Assert.IsTrue(await client.RemoveTagFromAllItemsAsync(tag));
 
-            var items = (await client.GetItemsAsync(tags: new string[] { tag.Label })).ToList();
-            Assert.IsTrue(items.Count == 0);
+                var items = (await client.GetItemsAsync(tags: new string[] { tag.Label })).ToList();
+                Assert.IsTrue(items.Count == 0);
+            }
         }
 
         [TestMethod]
         [TestCategory("Tags")]
         public async Task TagsAreRemovedFromAllItems()
         {
-            var testTags = (await client.GetTagsAsync()).Take(2);
-            var testTagsStringArray = testTags.ToCommaSeparatedString().Split(","[0]);
+            if (await client.VersionEqualsAsync("2.1"))
+            {
+                var testTags = (await client.GetTagsAsync()).Take(2);
+                var testTagsStringArray = testTags.ToCommaSeparatedString().Split(","[0]);
 
-            var previousItems = (await client.GetItemsAsync(tags: testTagsStringArray)).ToList();
+                var previousItems = (await client.GetItemsAsync(tags: testTagsStringArray)).ToList();
 
-            Assert.IsTrue(await client.RemoveTagsFromAllItemsAsync(testTags));
+                Assert.IsTrue(await client.RemoveTagsFromAllItemsAsync(testTags));
 
-            var newItems = (await client.GetItemsAsync(tags: testTagsStringArray)).ToList();
-            Assert.IsTrue(newItems.Count == 0);        
+                var newItems = (await client.GetItemsAsync(tags: testTagsStringArray)).ToList();
+                Assert.IsTrue(newItems.Count == 0);
+            }
         }
     }
 }
