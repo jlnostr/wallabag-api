@@ -41,34 +41,40 @@ namespace wallabag.Api.Tests
             Assert.IsTrue(items.Count > 0);
         }
 
-        /*
+
         [TestMethod]
         [TestCategory("Get")]
         public async Task ItemsRetrievedWithSpecificTag()
         {
-            List<WallabagItem> items = (await client.GetItemsAsync(Tags: new string[] { "politik" })).ToList();
+            if (await client.VersionEqualsAsync("2.1"))
+            {
+                List<WallabagItem> items = (await client.GetItemsAsync(tags: new string[] { "politik" })).ToList();
 
-            foreach (var item in items)
-                StringAssert.Contains(item.Tags.ToCommaSeparatedString(), "politik");
+                foreach (var item in items)
+                    StringAssert.Contains(item.Tags.ToCommaSeparatedString(), "politik");
 
-            Assert.IsTrue(items.Count > 0);
+                Assert.IsTrue(items.Count > 0);
+            }
         }
 
         [TestMethod]
         [TestCategory("Get")]
         public async Task ItemsRetrievedWithMultipleTags()
         {
-            List<WallabagItem> items = (await client.GetItemsAsync(Tags: new string[] { "politik", "test" })).ToList();
-
-            foreach (var item in items)
+            if (await client.VersionEqualsAsync("2.1"))
             {
-                StringAssert.Contains(item.Tags.ToCommaSeparatedString(), "politik");
-                StringAssert.Contains(item.Tags.ToCommaSeparatedString(), "test");
-            }
+                List<WallabagItem> items = (await client.GetItemsAsync(tags: new string[] { "politik", "test" })).ToList();
 
-            Assert.IsTrue(items.Count > 0);
+                foreach (var item in items)
+                {
+                    StringAssert.Contains(item.Tags.ToCommaSeparatedString(), "politik");
+                    StringAssert.Contains(item.Tags.ToCommaSeparatedString(), "test");
+                }
+
+                Assert.IsTrue(items.Count > 0);
+            }
         }
-        */
+
 
         [TestMethod]
         [TestCategory("Get")]
@@ -89,26 +95,25 @@ namespace wallabag.Api.Tests
         [TestMethod, TestCategory("Get")]
         public async Task ItemsRetrievedWithSinceParameter()
         {
-            var version = await client.GetVersionNumberAsync();
-            if (version.Contains("2.1") == false)
-                return;
+            if (await client.VersionEqualsAsync("2.1"))
+            {
+                var referenceDateTime = new DateTime(2016, 09, 01);
 
-            var referenceDateTime = new DateTime(2016, 09, 01);
+                List<WallabagItem> items = (await client.GetItemsAsync(since: referenceDateTime)).ToList();
 
-            List<WallabagItem> items = (await client.GetItemsAsync(since: referenceDateTime)).ToList();
+                var firstItem = items.First();
 
-            var firstItem = items.First();
-
-            Assert.IsTrue(firstItem.CreationDate > referenceDateTime);
-            foreach (var item in items)
-                Assert.IsTrue(item.CreationDate > referenceDateTime);
+                Assert.IsTrue(firstItem.CreationDate > referenceDateTime);
+                foreach (var item in items)
+                    Assert.IsTrue(item.CreationDate > referenceDateTime);
+            }
         }
 
         [TestMethod]
         [TestCategory("Get")]
         public async Task AllPreviewImageUrisAreAbsolute()
         {
-            List<WallabagItem> items = (await client.GetItemsAsync(itemsPerPage: 999999)).ToList();
+            List<WallabagItem> items = (await client.GetItemsAsync(itemsPerPage: 1000)).ToList();
 
             CollectionAssert.AllItemsAreUnique(items);
             Assert.IsTrue(items.Count > 0);
