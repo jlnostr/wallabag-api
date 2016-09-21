@@ -10,10 +10,10 @@ namespace wallabag.Api.Tests
     {
         // Enter your own credentials here or use the sample data below.
 
-        public const string wallabagUrl = "https://wallabag.jlnostr.de";
-        public const string username = "unit-testing";
-        public const string password = "unit-testing";
-        public const string clientId = "2_1881siitlw4gkggo0s4wo4cw04kcw0wc404wc8k8ocwocosok8";
-        public const string clientSecret = "56lgxc9lx5kw8kowgwcko4wcok448ck804sc0400kckw444wwk";
+        public const string wallabagUrl = "http://v2.wallabag.org";
+        public const string username = "wallabag";
+        public const string password = "wallabag";
+        public const string clientId = "48_uer5xv2x8eoccw8wkcksg4gw0o0g4gw0gs0wgk08o0kgocscg";
+        public const string clientSecret = "4tzdmj1k59gkg0ko4c8cwk0kk8gkgg8wcg8osw4ogwko4g8ows";
     }
 }
