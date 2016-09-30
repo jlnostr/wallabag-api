@@ -21,7 +21,7 @@ namespace wallabag.Api
         /// <param name="pageNumber">Number of page.</param>
         /// <param name="itemsPerPage">Number of items per page.</param>
         /// <param name="since">Minimum timestamp that the creation date should have. Requires wallabag 2.1.</param>
-        /// <param name="tags">An array of tags that applies to all items.</param>
+        /// <param name="tags">An array of tags that applies to all items. Requires wallabag 2.1.</param>
         /// <returns></returns>
         public async Task<IEnumerable<WallabagItem>> GetItemsAsync(
             bool? isRead = null,
@@ -46,7 +46,7 @@ namespace wallabag.Api
         /// <param name="pageNumber">Number of page.</param>
         /// <param name="itemsPerPage">Number of items per page.</param>       
         /// <param name="since">Minimum timestamp that the creation date should have. Requires wallabag 2.1.</param>
-        /// <param name="tags">An array of tags that applies to all items.</param>   
+        /// <param name="tags">An array of tags that applies to all items. Requires wallabag 2.1.</param>   
         /// <returns></returns>
         public async Task<ItemCollectionResponse> GetItemsWithEnhancedMetadataAsync(
             bool? isRead = null,
