@@ -1,3 +1,11 @@
+## 1.3.1
+- Authentication tokens are not longer required to ask for the version number using the `GetVersionNumberAsync()` task
+- Fix the `RemoveTagFromAllItemsAsync` method.
+
+## 1.3.0
+- Add option to suppress `HttpRequestException`
+- Add methods for new API callbacks coming with wallabag 2.1, for example the since parameter in `GetItemsAsync()`,
+
 ## 1.2.0
 - Add `CredentialsRefreshed`, `PreRequestExecution` and `AfterRequestExecution` events.
 
