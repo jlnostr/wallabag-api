@@ -59,11 +59,11 @@ namespace wallabag.Api
         /// </summary>
         public async Task<string> GetVersionNumberAsync()
         {
-            var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, "/version");
+            var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, "/version", requiresAuthentication: false);
             return await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<string>(jsonString));
         }
 
-        protected async Task<string> ExecuteHttpRequestAsync(HttpRequestMethod httpRequestMethod, string relativeUriString, Dictionary<string, object> parameters = default(Dictionary<string, object>))
+        protected async Task<string> ExecuteHttpRequestAsync(HttpRequestMethod httpRequestMethod, string relativeUriString, Dictionary<string, object> parameters = default(Dictionary<string, object>), bool requiresAuthentication = true)
         {
             var args = new PreRequestExecutionEventArgs();
             args.RequestMethod = httpRequestMethod;
@@ -71,10 +71,13 @@ namespace wallabag.Api
             args.Parameters = parameters;
             PreRequestExecution?.Invoke(this, args);
 
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", await GetAccessTokenAsync());
+            if (requiresAuthentication)
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", await GetAccessTokenAsync());
 
-            if (string.IsNullOrEmpty(AccessToken))
-                throw new Exception("Access token not available. Please create one using the RequestTokenAsync() method first.");
+                if (string.IsNullOrEmpty(AccessToken))
+                    throw new Exception("Access token not available. Please create one using the RequestTokenAsync() method first.");
+            }
 
             var uriString = $"{InstanceUri}api{relativeUriString}.json";
 
