@@ -102,7 +102,12 @@ namespace wallabag.Api
         /// <param name="tag">The tag that should be deleted.</param>
         /// <returns>True, if the action was successful.</returns>
         public async Task<bool> RemoveTagFromAllItemsAsync(string tag)
-            => await ExecuteHttpRequestAsync(HttpRequestMethod.Delete, $"/tags/{tag}") != null;
+        {
+            return await ExecuteHttpRequestAsync(HttpRequestMethod.Delete, "/tag/label", new Dictionary<string, object>()
+            {
+                ["tag"] = tag
+            }) != null;
+        }
 
         /// <summary>
         /// Removes one or more tags from all items.
@@ -119,7 +124,7 @@ namespace wallabag.Api
         /// <returns>True, if the action was successful.</returns>
         public async Task<bool> RemoveTagsFromAllItemsAsync(IEnumerable<string> tags)
         {
-            return await ExecuteHttpRequestAsync(HttpRequestMethod.Delete, $"/tags/label",
+            return await ExecuteHttpRequestAsync(HttpRequestMethod.Delete, "/tags/label",
                 new Dictionary<string, object>()
                 {
                     ["tags"] = tags.ToCommaSeparatedString()
