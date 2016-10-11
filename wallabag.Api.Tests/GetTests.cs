@@ -52,8 +52,6 @@ namespace wallabag.Api.Tests
 
                 foreach (var item in items)
                     StringAssert.Contains(item.Tags.ToCommaSeparatedString(), "politik");
-
-                Assert.IsTrue(items.Count > 0);
             }
         }
 
@@ -70,8 +68,6 @@ namespace wallabag.Api.Tests
                     StringAssert.Contains(item.Tags.ToCommaSeparatedString(), "politik");
                     StringAssert.Contains(item.Tags.ToCommaSeparatedString(), "test");
                 }
-
-                Assert.IsTrue(items.Count > 0);
             }
         }
 
