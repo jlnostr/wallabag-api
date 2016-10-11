@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static wallabag.Api.Tests.Credentials;
 
@@ -9,6 +10,7 @@ namespace wallabag.Api.Tests
     public partial class GeneralTests
     {
         WallabagClient client;
+        private Regex _versionNumberRegex = new Regex("2.\\d+.\\d+");
 
         [TestInitialize]
         public void InitializeUnitTests()
@@ -22,7 +24,17 @@ namespace wallabag.Api.Tests
         public async Task VersionNumberReturnsValidValue()
         {
             var version = await client.GetVersionNumberAsync();
-            Assert.IsTrue(version.Contains("2.0"));
+            Assert.IsTrue(_versionNumberRegex.Match(version).Success);
+        }
+
+        [TestMethod]
+        [TestCategory("General")]
+        public async Task VersionNumberReturnsWithoutCredentials()
+        {
+            var sampleClient = new WallabagClient(client.InstanceUri, string.Empty, string.Empty);
+                        
+            var version = await client.GetVersionNumberAsync();
+            Assert.IsTrue(_versionNumberRegex.Match(version).Success);
         }
 
         [TestMethod]
