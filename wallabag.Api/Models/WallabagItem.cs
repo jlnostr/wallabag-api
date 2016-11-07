@@ -84,7 +84,7 @@ namespace wallabag.Api.Models
         public string Language { get; set; }
 
         /// <summary>
-        /// Gets or sets the tags of the items. <seealso cref="WallabagClient.AddTagsAsync(WallabagItem, string[])"/> and <seealso cref="WallabagClient.RemoveTagsAsync(WallabagItem, WallabagTag[])"/>.
+        /// Gets or sets the tags of the items. <seealso cref="WallabagClient.AddTagsAsync(WallabagItem, IEnumerable{string})"/> and <seealso cref="WallabagClient.RemoveTagsAsync(WallabagItem, IEnumerable{WallabagTag})"/>.
         /// </summary>
         [JsonProperty("tags")]
         public IEnumerable<WallabagTag> Tags { get; set; }
