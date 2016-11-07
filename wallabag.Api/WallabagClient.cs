@@ -57,10 +57,13 @@ namespace wallabag.Api
         /// <summary>
         /// Returns the version number of the current wallabag instance.
         /// </summary>
+        /// <returns>
+        /// The version number of the server as string. Empty if it fails.
+        /// </returns>
         public async Task<string> GetVersionNumberAsync()
         {
             var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, "/version", requiresAuthentication: false);
-            return await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<string>(jsonString));
+            return await ParseJsonFromStringAsync<string>(jsonString);
         }
 
         private async Task<string> ExecuteHttpRequestAsync(HttpRequestMethod httpRequestMethod, string relativeUriString, Dictionary<string, object> parameters = default(Dictionary<string, object>), bool requiresAuthentication = true)
