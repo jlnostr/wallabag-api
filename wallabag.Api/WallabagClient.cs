@@ -13,7 +13,7 @@ namespace wallabag.Api
         /// <summary>
         /// Gets or sets if exceptions should be thrown.
         /// </summary>
-        public bool FireHtmlExceptions { get; set; }
+        public bool ThrowHttpExceptions { get; set; }
 
         /// <summary>
         /// Gets the timeout in milliseconds for each HTTP request.
@@ -27,13 +27,13 @@ namespace wallabag.Api
         /// <param name="clientId">The OAuth client id of the app.</param>
         /// <param name="clientSecret">The OAuth client secret of the app.</param>
         /// <param name="timeout">Number in milliseconds after the request will be cancelled.</param>
-        /// <param name="fireHtmlExceptions">Value that indicates if exceptions should be thrown.</param>
+        /// <param name="throwHttpExceptions">Value that indicates if exceptions should be thrown.</param>
         public WallabagClient(
             Uri uri,
             string clientId,
             string clientSecret,
             int timeout = 0,
-            bool fireHtmlExceptions = false)
+            bool throwHttpExceptions = false)
         {
             InstanceUri = uri;
             ClientId = clientId;
@@ -49,7 +49,7 @@ namespace wallabag.Api
             if (timeout > 0)
                 _httpClient.Timeout = TimeSpan.FromMilliseconds(timeout);
 
-            FireHtmlExceptions = fireHtmlExceptions;
+            ThrowHttpExceptions = throwHttpExceptions;
         }
 
         public void Dispose() => _httpClient.Dispose();
@@ -123,13 +123,9 @@ namespace wallabag.Api
                 else
                     return null;
             }
-            catch (HttpRequestException e)
+            catch (HttpRequestException)
             {
-                System.Diagnostics.Debug.WriteLine("[FAILURE] [wallabag-api] An error occured during the request: " + e.Message);
-
-                if (FireHtmlExceptions)
-                    throw e;
-
+                if (ThrowHttpExceptions) throw;
                 return null;
             }
         }

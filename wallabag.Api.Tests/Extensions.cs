@@ -50,7 +50,7 @@ namespace wallabag.Api.Tests
     {
         public static WallabagClient WithTimeout(this WallabagClient client, int timeout)
         {
-            return new WallabagClient(client.InstanceUri, client.ClientId, client.ClientSecret, timeout, client.FireHtmlExceptions)
+            return new WallabagClient(client.InstanceUri, client.ClientId, client.ClientSecret, timeout, client.ThrowHttpExceptions)
             {
                 AccessToken = client.AccessToken,
                 LastTokenRefreshDateTime = client.LastTokenRefreshDateTime,

@@ -57,7 +57,7 @@ namespace wallabag.Api
             parameters.Add("password", password);
 
             var content = new StringContent(JsonConvert.SerializeObject(parameters), System.Text.Encoding.UTF8, "application/json");
-            var response = await _httpClient.TryPostAsync(_AuthenticationUri, content, FireHtmlExceptions);
+            var response = await _httpClient.TryPostAsync(_AuthenticationUri, content, ThrowHttpExceptions);
 
             if (!response.IsSuccessStatusCode)
                 return false;
@@ -102,7 +102,7 @@ namespace wallabag.Api
             parameters.Add("refresh_token", RefreshToken);
 
             var content = new StringContent(JsonConvert.SerializeObject(parameters), System.Text.Encoding.UTF8, "application/json");
-            var response = await _httpClient.TryPostAsync(_AuthenticationUri, content, FireHtmlExceptions);
+            var response = await _httpClient.TryPostAsync(_AuthenticationUri, content, ThrowHttpExceptions);
 
             if (!response.IsSuccessStatusCode)
                 return false;
