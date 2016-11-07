@@ -57,7 +57,7 @@ namespace wallabag.Api
             parameters.Add("password", password);
 
             var content = new StringContent(JsonConvert.SerializeObject(parameters), System.Text.Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(_AuthenticationUri, content);
+            var response = await _httpClient.TryPostAsync(_AuthenticationUri, content, FireHtmlExceptions);
 
             if (!response.IsSuccessStatusCode)
                 return false;
@@ -102,7 +102,7 @@ namespace wallabag.Api
             parameters.Add("refresh_token", RefreshToken);
 
             var content = new StringContent(JsonConvert.SerializeObject(parameters), System.Text.Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(_AuthenticationUri, content);
+            var response = await _httpClient.TryPostAsync(_AuthenticationUri, content, FireHtmlExceptions);
 
             if (!response.IsSuccessStatusCode)
                 return false;
@@ -116,11 +116,11 @@ namespace wallabag.Api
 
             CredentialsRefreshed?.Invoke(this, null);
             return true;
-        }      
+        }
 
         /// <summary>
         /// Event that will fired if <see cref="RefreshAccessTokenAsync"/> was successful.
         /// </summary>
-        public event EventHandler CredentialsRefreshed;        
+        public event EventHandler CredentialsRefreshed;
     }
 }
