@@ -35,21 +35,21 @@ namespace wallabag.Api
             int timeout = 0,
             bool fireHtmlExceptions = false)
         {
-            this.InstanceUri = uri;
-            this.ClientId = clientId;
-            this.ClientSecret = clientSecret;
+            InstanceUri = uri;
+            ClientId = clientId;
+            ClientSecret = clientSecret;
 
             if (!string.IsNullOrEmpty(AccessToken) && !string.IsNullOrEmpty(RefreshToken))
             {
-                this.AccessToken = AccessToken;
-                this.RefreshToken = RefreshToken;
+                AccessToken = AccessToken;
+                RefreshToken = RefreshToken;
             }
 
-            this._httpClient = new HttpClient();
+            _httpClient = new HttpClient();
             if (timeout > 0)
-                this._httpClient.Timeout = TimeSpan.FromMilliseconds(timeout);
+                _httpClient.Timeout = TimeSpan.FromMilliseconds(timeout);
 
-            this.FireHtmlExceptions = fireHtmlExceptions;
+            FireHtmlExceptions = fireHtmlExceptions;
         }
 
         public void Dispose() => _httpClient.Dispose();
@@ -63,7 +63,7 @@ namespace wallabag.Api
             return await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<string>(jsonString));
         }
 
-        protected async Task<string> ExecuteHttpRequestAsync(HttpRequestMethod httpRequestMethod, string relativeUriString, Dictionary<string, object> parameters = default(Dictionary<string, object>), bool requiresAuthentication = true)
+        private async Task<string> ExecuteHttpRequestAsync(HttpRequestMethod httpRequestMethod, string relativeUriString, Dictionary<string, object> parameters = default(Dictionary<string, object>), bool requiresAuthentication = true)
         {
             var args = new PreRequestExecutionEventArgs();
             args.RequestMethod = httpRequestMethod;
@@ -131,7 +131,7 @@ namespace wallabag.Api
             }
         }
 
-        protected Task<T> ParseJsonFromStringAsync<T>(string s)
+        private Task<T> ParseJsonFromStringAsync<T>(string s)
         {
             if (!string.IsNullOrEmpty(s))
                 return Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(s));

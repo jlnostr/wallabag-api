@@ -28,8 +28,8 @@ namespace wallabag.Api.Models
         [JsonProperty("slug")]
         public string Slug { get; set; }
 
-        public override string ToString() => this.Label;
-        public override int GetHashCode() => this.Id;
+        public override string ToString() => Label;
+        public override int GetHashCode() => Id;
         public override bool Equals(object obj)
         {
             if (obj != null && obj.GetType().Equals(typeof(WallabagTag)))
@@ -40,6 +40,5 @@ namespace wallabag.Api.Models
             return false;
         }
         public int CompareTo(object obj) => ((IComparable)Label).CompareTo(obj);
-
     }
 }

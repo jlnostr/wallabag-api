@@ -63,6 +63,7 @@
     <Compile Include="ModifyTests.cs" />
     <Compile Include="TagsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\wallabag.Api\wallabag.Api.csproj">

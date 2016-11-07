@@ -96,7 +96,7 @@ namespace wallabag.Api.Models
         public Uri PreviewImageUri { get; set; }
 
 
-        public override string ToString() => this.Title ?? string.Empty;
+        public override string ToString() => Title ?? string.Empty;
         public override bool Equals(object obj)
         {
             if (obj != null && obj.GetType().Equals(typeof(WallabagItem)))
@@ -108,6 +108,5 @@ namespace wallabag.Api.Models
         }
         public override int GetHashCode() => Id;
         public int CompareTo(object obj) => LastUpdated.CompareTo((obj as WallabagItem).LastUpdated);
-
     }
 }
