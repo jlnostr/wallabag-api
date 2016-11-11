@@ -7,7 +7,7 @@
         public const string wallabagUrl = "https://wallabag.jlnostr.de";
         public const string username = "wallabag";
         public const string password = "wallabag";
-        public const string clientId = "1_1zobxeq3svc0oksww44g0kko4s80sssc8wsc4c80c00g0ww8oc";
-        public const string clientSecret = "6cq68f7hxkco4gokcc44gkkoks0ogw44g040cow8s4gogo84k8";
+        public const string clientId = "4_1bblj107c7j4g8ss44co488sk80k8koscwowwo0wcsg08wk8w8";
+        public const string clientSecret = "rzurdc5w7u8og408kwcs4wc4kwgoo808ggocwsgg0gs80480c";
     }
 }

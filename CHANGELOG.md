@@ -1,3 +1,10 @@
+## 1.3.2
+- Some code enhancements
+- Handle possible exceptions in GetVersionNumberAsync
+- Better handling of HttpRequestExceptions
+- Rename FireHtmlExceptions to ThrowHttpExceptions
+- Return null of the credentials are outdates
+
 ## 1.3.1
 - Authentication tokens are not longer required to ask for the version number using the `GetVersionNumberAsync()` task
 - Fix the `RemoveTagFromAllItemsAsync` method.
