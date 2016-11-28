@@ -38,6 +38,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Components\Add.cs" />
+    <Compile Include="Components\Annotations.cs" />
     <Compile Include="Components\Authentication.cs" />
     <Compile Include="Components\Get.cs" />
     <Compile Include="Components\Modify.cs" />
@@ -49,6 +50,7 @@
     <Compile Include="Responses\AuthenticationResponse.cs" />
     <Compile Include="Responses\ItemCollectionResponse.cs" />
     <Compile Include="Utilities.cs" />
+    <Compile Include="Models\WallabagAnnotation.cs" />
     <Compile Include="WallabagClient.cs" />
   </ItemGroup>
   <ItemGroup>
