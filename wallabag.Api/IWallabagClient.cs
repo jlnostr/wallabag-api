@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using wallabag.Api.Models;
 using static wallabag.Api.WallabagClient;
@@ -14,13 +15,13 @@ namespace wallabag.Api
         string AccessToken { get; set; }
         string RefreshToken { get; set; }
 
-        Task<string> GetVersionNumberAsync();
+        Task<string> GetVersionNumberAsync(CancellationToken cancellationToken = default(CancellationToken));
 
-        Task<string> GetAccessTokenAsync();
-        Task<bool> RefreshAccessTokenAsync();
-        Task<bool> RequestTokenAsync(string username, string password);
+        Task<string> GetAccessTokenAsync(CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> RefreshAccessTokenAsync(CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> RequestTokenAsync(string username, string password, CancellationToken cancellationToken = default(CancellationToken));
 
-        Task<WallabagItem> AddAsync(Uri uri, IEnumerable<string> tags = null, string title = null);
+        Task<WallabagItem> AddAsync(Uri uri, IEnumerable<string> tags = null, string title = null, CancellationToken cancellationToken = default(CancellationToken));
 
         Task<IEnumerable<WallabagItem>> GetItemsAsync(
             bool? isRead = null,
@@ -30,28 +31,29 @@ namespace wallabag.Api
             int? pageNumber = null,
             int? itemsPerPage = null,
             DateTime? since = null,
-            IEnumerable<string> tags = null);
-        Task<WallabagItem> GetItemAsync(int itemId);
-        Task<IEnumerable<WallabagTag>> GetTagsAsync();
+            IEnumerable<string> tags = null,
+            CancellationToken cancellationToken = default(CancellationToken));
+        Task<WallabagItem> GetItemAsync(int itemId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<IEnumerable<WallabagTag>> GetTagsAsync(CancellationToken cancellationToken = default(CancellationToken));
 
-        Task<bool> ArchiveAsync(int itemId);
-        Task<bool> ArchiveAsync(WallabagItem item);
-        Task<bool> UnarchiveAsync(int itemId);
-        Task<bool> UnarchiveAsync(WallabagItem item);
-        Task<bool> FavoriteAsync(int itemId);
-        Task<bool> FavoriteAsync(WallabagItem item);
-        Task<bool> UnfavoriteAsync(int itemId);
-        Task<bool> UnfavoriteAsync(WallabagItem item);
-        Task<bool> DeleteAsync(int itemId);
-        Task<bool> DeleteAsync(WallabagItem item);
+        Task<bool> ArchiveAsync(int itemId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> ArchiveAsync(WallabagItem item, CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> UnarchiveAsync(int itemId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> UnarchiveAsync(WallabagItem item, CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> FavoriteAsync(int itemId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> FavoriteAsync(WallabagItem item, CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> UnfavoriteAsync(int itemId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> UnfavoriteAsync(WallabagItem item, CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> DeleteAsync(int itemId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> DeleteAsync(WallabagItem item, CancellationToken cancellationToken = default(CancellationToken));
 
-        Task<IEnumerable<WallabagTag>> AddTagsAsync(int itemId, IEnumerable<string> tags);
-        Task<IEnumerable<WallabagTag>> AddTagsAsync(WallabagItem item, IEnumerable<string> tags);
-        Task<bool> RemoveTagsAsync(int itemId, IEnumerable<WallabagTag> tags);
-        Task<bool> RemoveTagsAsync(WallabagItem item, IEnumerable<WallabagTag> tags);
-        Task<bool> RemoveTagFromAllItemsAsync(WallabagTag tag);
-        Task<bool> RemoveTagFromAllItemsAsync(string tag);
-        Task<bool> RemoveTagsFromAllItemsAsync(IEnumerable<WallabagTag> tags);
-        Task<bool> RemoveTagsFromAllItemsAsync(IEnumerable<string> tags);        
+        Task<IEnumerable<WallabagTag>> AddTagsAsync(int itemId, IEnumerable<string> tags, CancellationToken cancellationToken = default(CancellationToken));
+        Task<IEnumerable<WallabagTag>> AddTagsAsync(WallabagItem item, IEnumerable<string> tags, CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> RemoveTagsAsync(int itemId, IEnumerable<WallabagTag> tags, CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> RemoveTagsAsync(WallabagItem item, IEnumerable<WallabagTag> tags, CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> RemoveTagFromAllItemsAsync(WallabagTag tag, CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> RemoveTagFromAllItemsAsync(string tag, CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> RemoveTagsFromAllItemsAsync(IEnumerable<WallabagTag> tags, CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> RemoveTagsFromAllItemsAsync(IEnumerable<string> tags, CancellationToken cancellationToken = default(CancellationToken));
     }
 }
