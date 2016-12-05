@@ -44,8 +44,10 @@ namespace wallabag.Api
                 AccessToken = AccessToken;
                 RefreshToken = RefreshToken;
             }
-
+                      
             _httpClient = new HttpClient();
+            _httpClient.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+            
             if (timeout > 0)
                 _httpClient.Timeout = TimeSpan.FromMilliseconds(timeout);
 
