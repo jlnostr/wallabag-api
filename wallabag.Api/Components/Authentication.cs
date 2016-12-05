@@ -64,7 +64,7 @@ namespace wallabag.Api
 
             var responseString = await response.Content.ReadAsStringAsync();
 
-            var result = JsonConvert.DeserializeObject<AuthenticationResponse>(responseString);
+            var result = await ParseJsonFromStringAsync<AuthenticationResponse>(responseString);
             AccessToken = result.AccessToken;
             RefreshToken = result.RefreshToken;
 
@@ -109,7 +109,7 @@ namespace wallabag.Api
 
             var responseString = await response.Content.ReadAsStringAsync();
 
-            var result = JsonConvert.DeserializeObject<AuthenticationResponse>(responseString);
+            var result = await ParseJsonFromStringAsync<AuthenticationResponse>(responseString);
             AccessToken = result.AccessToken;
             RefreshToken = result.RefreshToken;
             LastTokenRefreshDateTime = DateTime.UtcNow;
