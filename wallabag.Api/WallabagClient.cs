@@ -139,10 +139,10 @@ namespace wallabag.Api
             }
         }
 
-        private Task<T> ParseJsonFromStringAsync<T>(string s)
+        private Task<T> ParseJsonFromStringAsync<T>(string s, CancellationToken cancellationToken)
         {
             if (!string.IsNullOrEmpty(s))
-                return Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(s));
+                return Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(s), cancellationToken);
             else
                 return Task.FromResult(default(T));
         }
