@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace wallabag.Api
@@ -44,10 +45,10 @@ namespace wallabag.Api
                 AccessToken = AccessToken;
                 RefreshToken = RefreshToken;
             }
-                      
+
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Accept.ParseAdd("application/json");
-            
+
             if (timeout > 0)
                 _httpClient.Timeout = TimeSpan.FromMilliseconds(timeout);
 
@@ -68,8 +69,10 @@ namespace wallabag.Api
             return await ParseJsonFromStringAsync<string>(jsonString);
         }
 
-        private async Task<string> ExecuteHttpRequestAsync(HttpRequestMethod httpRequestMethod, string relativeUriString, Dictionary<string, object> parameters = default(Dictionary<string, object>), bool requiresAuthentication = true)
+        private async Task<string> ExecuteHttpRequestAsync(HttpRequestMethod httpRequestMethod, string relativeUriString, CancellationToken cancellationToken, Dictionary<string, object> parameters = default(Dictionary<string, object>), bool requiresAuthentication = true)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var args = new PreRequestExecutionEventArgs();
             args.RequestMethod = httpRequestMethod;
             args.RequestUriSubString = relativeUriString;
@@ -121,7 +124,7 @@ namespace wallabag.Api
 
             try
             {
-                var response = await _httpClient.SendAsync(request);
+                var response = await _httpClient.SendAsync(request, cancellationToken);
                 AfterRequestExecution?.Invoke(this, response);
 
                 if (response.IsSuccessStatusCode)
