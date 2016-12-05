@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Net.Http;
 using wallabag.Api.Responses;
+using System.Threading;
 
 namespace wallabag.Api
 {
@@ -47,7 +48,7 @@ namespace wallabag.Api
         /// <param name="username">The username.</param>
         /// <param name="password">The password.</param>
         /// <returns>True, if login was successful, false otherwise.</returns>
-        public async Task<bool> RequestTokenAsync(string username, string password)
+        public async Task<bool> RequestTokenAsync(string username, string password, CancellationToken cancellationToken = default(CancellationToken))
         {
             Dictionary<string, string> parameters = new Dictionary<string, string>();
             parameters.Add("grant_type", "password");
@@ -57,14 +58,14 @@ namespace wallabag.Api
             parameters.Add("password", password);
 
             var content = new StringContent(JsonConvert.SerializeObject(parameters), System.Text.Encoding.UTF8, "application/json");
-            var response = await _httpClient.TryPostAsync(_AuthenticationUri, content, ThrowHttpExceptions);
+            var response = await _httpClient.TryPostAsync(_AuthenticationUri, content, ThrowHttpExceptions, cancellationToken);
 
             if (!response.IsSuccessStatusCode)
                 return false;
 
             var responseString = await response.Content.ReadAsStringAsync();
 
-            var result = await ParseJsonFromStringAsync<AuthenticationResponse>(responseString);
+            var result = await ParseJsonFromStringAsync<AuthenticationResponse>(responseString, cancellationToken);
             AccessToken = result.AccessToken;
             RefreshToken = result.RefreshToken;
 
@@ -77,11 +78,11 @@ namespace wallabag.Api
         /// Returns always a valid <see cref="AccessToken"/>. In case it's expired, the <see cref="RefreshAccessTokenAsync"/> task is called.
         /// </summary>
         /// <returns>A valid <seealso cref="AccessToken"/>.</returns>
-        public async Task<string> GetAccessTokenAsync()
+        public async Task<string> GetAccessTokenAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             TimeSpan duration = DateTime.UtcNow.Subtract(LastTokenRefreshDateTime);
             if (duration.TotalSeconds > 3600)
-                await RefreshAccessTokenAsync();
+                await RefreshAccessTokenAsync(cancellationToken);
 
             return AccessToken;
         }
@@ -90,7 +91,7 @@ namespace wallabag.Api
         /// Refreshes a token by using the given <see cref="RefreshToken"/>.
         /// </summary>
         /// <returns>True, if re-authentication was successful, false otherwise.</returns>
-        public async Task<bool> RefreshAccessTokenAsync()
+        public async Task<bool> RefreshAccessTokenAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(RefreshToken))
                 throw new ArgumentNullException("RefreshToken has no value. It will created once you've authenticated the first time.");
@@ -102,14 +103,14 @@ namespace wallabag.Api
             parameters.Add("refresh_token", RefreshToken);
 
             var content = new StringContent(JsonConvert.SerializeObject(parameters), System.Text.Encoding.UTF8, "application/json");
-            var response = await _httpClient.TryPostAsync(_AuthenticationUri, content, ThrowHttpExceptions);
+            var response = await _httpClient.TryPostAsync(_AuthenticationUri, content, ThrowHttpExceptions, cancellationToken);
 
             if (!response.IsSuccessStatusCode)
                 return false;
 
             var responseString = await response.Content.ReadAsStringAsync();
 
-            var result = await ParseJsonFromStringAsync<AuthenticationResponse>(responseString);
+            var result = await ParseJsonFromStringAsync<AuthenticationResponse>(responseString, cancellationToken);
             AccessToken = result.AccessToken;
             RefreshToken = result.RefreshToken;
             LastTokenRefreshDateTime = DateTime.UtcNow;

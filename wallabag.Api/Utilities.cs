@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace wallabag.Api
@@ -20,9 +21,9 @@ namespace wallabag.Api
         /// </summary>
         internal static int ToInt(this bool input) => input ? 1 : 0;
 
-        internal static Task<HttpResponseMessage> TryPostAsync(this HttpClient client, Uri requestUri, HttpContent content, bool throwExceptions)
+        internal static Task<HttpResponseMessage> TryPostAsync(this HttpClient client, Uri requestUri, HttpContent content, bool throwExceptions, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return client.PostAsync(requestUri, content).ContinueWith<HttpResponseMessage>(task =>
+            return client.PostAsync(requestUri, content, cancellationToken).ContinueWith<HttpResponseMessage>(task =>
             {
                 if (task.Exception != null && throwExceptions)
                     throw task.Exception;

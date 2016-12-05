@@ -63,10 +63,10 @@ namespace wallabag.Api
         /// <returns>
         /// The version number of the server as string. Empty if it fails.
         /// </returns>
-        public async Task<string> GetVersionNumberAsync()
+        public async Task<string> GetVersionNumberAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
-            var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, "/version", requiresAuthentication: false);
-            return await ParseJsonFromStringAsync<string>(jsonString);
+            var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, "/version", cancellationToken, requiresAuthentication: false);
+            return await ParseJsonFromStringAsync<string>(jsonString, cancellationToken);
         }
 
         private async Task<string> ExecuteHttpRequestAsync(HttpRequestMethod httpRequestMethod, string relativeUriString, CancellationToken cancellationToken, Dictionary<string, object> parameters = default(Dictionary<string, object>), bool requiresAuthentication = true)
