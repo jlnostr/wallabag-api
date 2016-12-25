@@ -63,5 +63,13 @@ namespace wallabag.Api.Models
         [JsonProperty("endOffset")]
         public int EndOffset { get; set; }
 
+        public WallabagAnnotationRange() { }
+        public WallabagAnnotationRange(string start, int startOffset, string end, int endOffset)
+        {
+            Start = start;
+            StartOffset = startOffset;
+            End = end;
+            EndOffset = endOffset;
+        }
     }
 }
