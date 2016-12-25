@@ -38,6 +38,14 @@ namespace wallabag.Api.Models
 
         [JsonProperty("ranges")]
         public IList<WallabagAnnotationRange> Ranges { get; set; } = new List<WallabagAnnotationRange>();
+
+        public WallabagAnnotation() { }
+        public WallabagAnnotation(IList<WallabagAnnotationRange> ranges, string text, string quote = "") : this()
+        {
+            Ranges = ranges;
+            Text = text;
+            Quote = quote;
+        }
     }
 
     [ImplementPropertyChanged]
