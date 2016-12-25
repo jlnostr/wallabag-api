@@ -37,7 +37,7 @@ namespace wallabag.Api.Models
         public DateTime LastUpdated { get; set; }
 
         [JsonProperty("ranges")]
-        public IEnumerable<WallabagAnnotationRange> Ranges { get; set; }
+        public IList<WallabagAnnotationRange> Ranges { get; set; } = new List<WallabagAnnotationRange>();
     }
 
     [ImplementPropertyChanged]
