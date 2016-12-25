@@ -56,13 +56,13 @@ namespace wallabag.Api
         Task<bool> RemoveTagsFromAllItemsAsync(IEnumerable<WallabagTag> tags, CancellationToken cancellationToken = default(CancellationToken));
         Task<bool> RemoveTagsFromAllItemsAsync(IEnumerable<string> tags, CancellationToken cancellationToken = default(CancellationToken));
 
-        Task<IEnumerable<WallabagAnnotation>> GetAnnotationsAsync(WallabagItem item);
-        Task<IEnumerable<WallabagAnnotation>> GetAnnotationsAsync(int itemId);
-        Task<bool> AddAnnotationAsync(WallabagItem item, WallabagAnnotation annotation);
-        Task<bool> AddAnnotationAsync(int itemId, WallabagAnnotation annotation);
-        Task<bool> UpdateAnnotationAsync(WallabagAnnotation oldAnnotation, WallabagAnnotation newAnnotation);
-        Task<bool> UpdateAnnotationAsync(int oldAnnotationId, WallabagAnnotation newAnnotation);
-        Task<bool> DeleteAnnotationAsync(WallabagAnnotation annotation);
-        Task<bool> DeleteAnnotationAsync(int annotationId);
+        Task<IEnumerable<WallabagAnnotation>> GetAnnotationsAsync(WallabagItem item, CancellationToken cancellationToken = default(CancellationToken));
+        Task<IEnumerable<WallabagAnnotation>> GetAnnotationsAsync(int itemId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<WallabagAnnotation> AddAnnotationAsync(WallabagItem item, WallabagAnnotation annotation, CancellationToken cancellationToken = default(CancellationToken));
+        Task<WallabagAnnotation> AddAnnotationAsync(int itemId, WallabagAnnotation annotation, CancellationToken cancellationToken = default(CancellationToken));
+        Task<WallabagAnnotation> UpdateAnnotationAsync(WallabagAnnotation oldAnnotation, WallabagAnnotation newAnnotation, CancellationToken cancellationToken = default(CancellationToken));
+        Task<WallabagAnnotation> UpdateAnnotationAsync(int oldAnnotationId, WallabagAnnotation newAnnotation, CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> DeleteAnnotationAsync(WallabagAnnotation annotation, CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> DeleteAnnotationAsync(int annotationId, CancellationToken cancellationToken = default(CancellationToken));
     }
 }
