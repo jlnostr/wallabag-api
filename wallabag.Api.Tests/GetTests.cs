@@ -61,13 +61,12 @@ namespace wallabag.Api.Tests
         {
             if (await client.VersionEqualsAsync("2.1"))
             {
-                List<WallabagItem> items = (await client.GetItemsAsync(tags: new string[] { "politik", "test" })).ToList();
+                var sampleTag = (await client.GetTagsAsync()).First();
+
+                List<WallabagItem> items = (await client.GetItemsAsync(tags: new string[] { sampleTag.Label })).ToList();
 
                 foreach (var item in items)
-                {
-                    StringAssert.Contains(item.Tags.ToCommaSeparatedString(), "politik");
-                    StringAssert.Contains(item.Tags.ToCommaSeparatedString(), "test");
-                }
+                    StringAssert.Contains(item.Tags.ToCommaSeparatedString(), sampleTag.Label);
             }
         }
 

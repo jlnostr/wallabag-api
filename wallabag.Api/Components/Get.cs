@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using wallabag.Api.Models;
 using wallabag.Api.Responses;
@@ -31,9 +32,10 @@ namespace wallabag.Api
             int? pageNumber = null,
             int? itemsPerPage = null,
             DateTime? since = null,
-            IEnumerable<string> tags = null)
+            IEnumerable<string> tags = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            return (await GetItemsWithEnhancedMetadataAsync(isRead, isStarred, dateOrder, sortOrder, pageNumber, itemsPerPage, since, tags))?.Items;
+            return (await GetItemsWithEnhancedMetadataAsync(isRead, isStarred, dateOrder, sortOrder, pageNumber, itemsPerPage, since, tags, cancellationToken))?.Items;
         }
 
         /// <summary>
@@ -56,7 +58,8 @@ namespace wallabag.Api
             int? pageNumber = null,
             int? itemsPerPage = null,
             DateTime? since = null,
-           IEnumerable<string> tags = null)
+            IEnumerable<string> tags = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -77,8 +80,8 @@ namespace wallabag.Api
             if (tags != null)
                 parameters.Add("tags", System.Net.WebUtility.HtmlEncode(tags.ToCommaSeparatedString()));
 
-            var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, "/entries", parameters);
-            var response = await ParseJsonFromStringAsync<ItemCollectionResponse>(jsonString);
+            var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, "/entries", cancellationToken, parameters);
+            var response = await ParseJsonFromStringAsync<ItemCollectionResponse>(jsonString, cancellationToken);
 
             if (response != null)
                 foreach (var item in response.Items)
@@ -92,10 +95,10 @@ namespace wallabag.Api
         /// </summary>
         /// <param name="itemId">The item id.</param>
         /// <returns><see cref="WallabagItem"/></returns>
-        public async Task<WallabagItem> GetItemAsync(int itemId)
+        public async Task<WallabagItem> GetItemAsync(int itemId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, $"/entries/{itemId}");
-            var result = await ParseJsonFromStringAsync<WallabagItem>(jsonString);
+            var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, $"/entries/{itemId}", cancellationToken);
+            var result = await ParseJsonFromStringAsync<WallabagItem>(jsonString, cancellationToken);
             CheckUriOfItem(result);
             return result;
         }

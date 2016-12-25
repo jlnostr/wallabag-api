@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace wallabag.Api
@@ -46,6 +47,8 @@ namespace wallabag.Api
             }
 
             _httpClient = new HttpClient();
+            _httpClient.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+
             if (timeout > 0)
                 _httpClient.Timeout = TimeSpan.FromMilliseconds(timeout);
 
@@ -60,14 +63,16 @@ namespace wallabag.Api
         /// <returns>
         /// The version number of the server as string. Empty if it fails.
         /// </returns>
-        public async Task<string> GetVersionNumberAsync()
+        public async Task<string> GetVersionNumberAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
-            var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, "/version", requiresAuthentication: false);
-            return await ParseJsonFromStringAsync<string>(jsonString);
+            var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, "/version", cancellationToken, requiresAuthentication: false);
+            return await ParseJsonFromStringAsync<string>(jsonString, cancellationToken);
         }
 
-        private async Task<string> ExecuteHttpRequestAsync(HttpRequestMethod httpRequestMethod, string relativeUriString, Dictionary<string, object> parameters = default(Dictionary<string, object>), bool requiresAuthentication = true)
+        private async Task<string> ExecuteHttpRequestAsync(HttpRequestMethod httpRequestMethod, string relativeUriString, CancellationToken cancellationToken, Dictionary<string, object> parameters = default(Dictionary<string, object>), bool requiresAuthentication = true)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var args = new PreRequestExecutionEventArgs();
             args.RequestMethod = httpRequestMethod;
             args.RequestUriSubString = relativeUriString;
@@ -79,11 +84,11 @@ namespace wallabag.Api
                 if (string.IsNullOrEmpty(AccessToken))
                     throw new Exception("Access token not available. Please create one using the RequestTokenAsync() method first.");
 
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", await GetAccessTokenAsync());
+
                 // The access token exists, but it's outdated and couldn't be updated due to several reasons.
                 if (!string.IsNullOrEmpty(AccessToken) && DateTime.UtcNow.Subtract(LastTokenRefreshDateTime).TotalSeconds > 3600)
                     return null;
-
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", await GetAccessTokenAsync());
             }
 
             var uriString = $"{InstanceUri}api{relativeUriString}.json";
@@ -119,7 +124,7 @@ namespace wallabag.Api
 
             try
             {
-                var response = await _httpClient.SendAsync(request);
+                var response = await _httpClient.SendAsync(request, cancellationToken);
                 AfterRequestExecution?.Invoke(this, response);
 
                 if (response.IsSuccessStatusCode)
@@ -134,10 +139,10 @@ namespace wallabag.Api
             }
         }
 
-        private Task<T> ParseJsonFromStringAsync<T>(string s)
+        private Task<T> ParseJsonFromStringAsync<T>(string s, CancellationToken cancellationToken)
         {
             if (!string.IsNullOrEmpty(s))
-                return Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(s));
+                return Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(s), cancellationToken);
             else
                 return Task.FromResult(default(T));
         }

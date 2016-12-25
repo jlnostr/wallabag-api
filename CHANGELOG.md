@@ -1,9 +1,13 @@
+## 1.3.3
+- Add an optional `cancellationToken` to each async method
+- Add the `Accept: application\json` header to each request (fixes HTTP code 406 on wallabag.it)
+
 ## 1.3.2
 - Some code enhancements
 - Handle possible exceptions in GetVersionNumberAsync
 - Better handling of HttpRequestExceptions
 - Rename FireHtmlExceptions to ThrowHttpExceptions
-- Return null of the credentials are outdates
+- Return null of the credentials are outdated
 
 ## 1.3.1
 - Authentication tokens are not longer required to ask for the version number using the `GetVersionNumberAsync()` task
