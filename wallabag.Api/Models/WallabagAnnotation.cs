@@ -40,6 +40,12 @@ namespace wallabag.Api.Models
         public IList<WallabagAnnotationRange> Ranges { get; set; } = new List<WallabagAnnotationRange>();
 
         public WallabagAnnotation() { }
+        public WallabagAnnotation(WallabagAnnotationRange range, string text, string quote = "") : this()
+        {
+            Ranges.Add(range);
+            Text = text;
+            Quote = quote;
+        }
         public WallabagAnnotation(IList<WallabagAnnotationRange> ranges, string text, string quote = "") : this()
         {
             Ranges = ranges;
