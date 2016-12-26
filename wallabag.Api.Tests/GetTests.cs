@@ -93,9 +93,9 @@ namespace wallabag.Api.Tests
 
                 var firstItem = items.First();
 
-                Assert.IsTrue(firstItem.CreationDate > referenceDateTime);
+                Assert.IsTrue(firstItem.LastUpdated > referenceDateTime);
                 foreach (var item in items)
-                    Assert.IsTrue(item.CreationDate > referenceDateTime);
+                    Assert.IsTrue(item.LastUpdated > referenceDateTime);
             }
         }
 
