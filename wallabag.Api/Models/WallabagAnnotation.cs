@@ -52,6 +52,10 @@ namespace wallabag.Api.Models
             Text = text;
             Quote = quote;
         }
+
+        public override bool Equals(object obj) => (obj != null) && ((obj as WallabagAnnotation).Id.Equals(Id));
+        public override int GetHashCode() => Id;
+        public override string ToString() => Text;
     }
 
     [ImplementPropertyChanged]
