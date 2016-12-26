@@ -4,10 +4,10 @@ using wallabag.Api.Models;
 
 namespace wallabag.Api.Tests
 {
-    public partial class GeneralTests
+    [TestClass]
+    public class EqualityTests : TestBaseClass
     {
         [TestMethod]
-        [TestCategory("Equality")]
         public void ItemsWithSameIdAreEqual()
         {
             var item1 = new WallabagItem() { Id = 1337 };
@@ -19,7 +19,6 @@ namespace wallabag.Api.Tests
         }
 
         [TestMethod]
-        [TestCategory("Equality")]
         public void ItemsWithDifferentIdsAreNotEqual()
         {
             var item1 = new WallabagItem() { Id = 1337 };
@@ -31,7 +30,6 @@ namespace wallabag.Api.Tests
         }
 
         [TestMethod]
-        [TestCategory("Equality")]
         public void ItemsWithSameIdAndSameModificationDateAreEqual()
         {
             var item1 = new WallabagItem() { Id = 1337, LastUpdated = DateTime.Now };
@@ -43,7 +41,6 @@ namespace wallabag.Api.Tests
         }
 
         [TestMethod]
-        [TestCategory("Equality")]
         public void ItemsWithSameIdAndDifferentModificationDateAreNotEqual()
         {
             var item1 = new WallabagItem() { Id = 1337, LastUpdated = DateTime.Now };
@@ -56,7 +53,6 @@ namespace wallabag.Api.Tests
         }
 
         [TestMethod]
-        [TestCategory("Equality")]
         public void ItemsWithDifferentIdAndSameTitleAreNotEqual()
         {
             var item1 = new WallabagItem() { Id = 1337, Title = "test" };
@@ -68,7 +64,6 @@ namespace wallabag.Api.Tests
         }
 
         [TestMethod]
-        [TestCategory("Equality")]
         public void TagsWithDifferentIdsAndSameLabelAreEqual()
         {
             var tag1 = new WallabagTag() { Id = 1, Label = "test" };
@@ -80,7 +75,6 @@ namespace wallabag.Api.Tests
         }
 
         [TestMethod]
-        [TestCategory("Equality")]
         public void TagsWithSameIdsAndSameLabelAreEqual()
         {
             var tag1 = new WallabagTag() { Id = 1, Label = "test" };
@@ -92,7 +86,6 @@ namespace wallabag.Api.Tests
         }
 
         [TestMethod]
-        [TestCategory("Equality")]
         public void TagsWithSameIdAndDifferentLabelAreNotEqual()
         {
             var tag1 = new WallabagTag() { Id = 1, Label = "lorem" };

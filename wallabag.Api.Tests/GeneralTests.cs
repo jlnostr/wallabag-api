@@ -7,38 +7,27 @@ using static wallabag.Api.Tests.Credentials;
 namespace wallabag.Api.Tests
 {
     [TestClass]
-    public partial class GeneralTests
+    public class GeneralTests : TestBaseClass
     {
-        WallabagClient client;
         private Regex _versionNumberRegex = new Regex("2.\\d+.\\d+");
 
-        [TestInitialize]
-        public void InitializeUnitTests()
-        {
-            client = new WallabagClient(new Uri(wallabagUrl), clientId, clientSecret);
-            client.RequestTokenAsync(username, password).Wait();
-        }
-
         [TestMethod]
-        [TestCategory("General")]
         public async Task VersionNumberReturnsValidValue()
         {
-            var version = await client.GetVersionNumberAsync();
+            var version = await Client.GetVersionNumberAsync();
             Assert.IsTrue(_versionNumberRegex.Match(version).Success);
         }
 
         [TestMethod]
-        [TestCategory("General")]
         public async Task VersionNumberReturnsWithoutCredentials()
         {
-            var sampleClient = new WallabagClient(client.InstanceUri, string.Empty, string.Empty);
-                        
-            var version = await client.GetVersionNumberAsync();
+            var sampleClient = new WallabagClient(Client.InstanceUri, string.Empty, string.Empty);
+
+            var version = await Client.GetVersionNumberAsync();
             Assert.IsTrue(_versionNumberRegex.Match(version).Success);
         }
 
         [TestMethod]
-        [TestCategory("General")]
         public void InitializationFailsWithInvalidUri()
         {
             AssertExtensions.ThrowsExceptionAsync<UriFormatException>(() =>

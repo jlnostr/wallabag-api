@@ -1,66 +1,66 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Threading.Tasks;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Linq;
+using System.Threading.Tasks;
 using wallabag.Api.Models;
 
 namespace wallabag.Api.Tests
 {
-    public partial class GeneralTests
+    [TestClass]
+    public class ModifyTests : TestBaseClass
     {
+        private WallabagItem _sampleItem;
+
         [TestMethod]
-        [TestCategory("Modify")]
         public void ModifyingFailsWhenItemIdIsMissing()
         {
-            AssertExtensions.ThrowsExceptionAsync<ArgumentNullException>(async () => { await client.ArchiveAsync(0); });
-            AssertExtensions.ThrowsExceptionAsync<ArgumentNullException>(async () => { await client.UnarchiveAsync(0); });
-            AssertExtensions.ThrowsExceptionAsync<ArgumentNullException>(async () => { await client.FavoriteAsync(0); });
-            AssertExtensions.ThrowsExceptionAsync<ArgumentNullException>(async () => { await client.UnfavoriteAsync(0); });
-            AssertExtensions.ThrowsExceptionAsync<ArgumentNullException>(async () => { await client.DeleteAsync(0); });
+            AssertExtensions.ThrowsExceptionAsync<ArgumentNullException>(async () => { await Client.ArchiveAsync(0); });
+            AssertExtensions.ThrowsExceptionAsync<ArgumentNullException>(async () => { await Client.UnarchiveAsync(0); });
+            AssertExtensions.ThrowsExceptionAsync<ArgumentNullException>(async () => { await Client.FavoriteAsync(0); });
+            AssertExtensions.ThrowsExceptionAsync<ArgumentNullException>(async () => { await Client.UnfavoriteAsync(0); });
+            AssertExtensions.ThrowsExceptionAsync<ArgumentNullException>(async () => { await Client.DeleteAsync(0); });
         }
 
         [TestMethod]
-        [TestCategory("Modify")]
         public async Task ItemIsArchivedAndUnarchived()
         {
-            var itemId = (await client.GetItemsAsync()).First().Id;
+            var itemId = (await Client.GetItemsAsync()).First().Id;
 
-            Assert.IsTrue(await client.ArchiveAsync(itemId));
-            Assert.IsTrue((await client.GetItemAsync(itemId)).IsRead);
-            Assert.IsTrue(await client.UnarchiveAsync(itemId));
-            Assert.IsTrue((await client.GetItemAsync(itemId)).IsRead == false);
+            Assert.IsTrue(await Client.ArchiveAsync(itemId));
+            Assert.IsTrue((await Client.GetItemAsync(itemId)).IsRead);
+            Assert.IsTrue(await Client.UnarchiveAsync(itemId));
+            Assert.IsTrue((await Client.GetItemAsync(itemId)).IsRead == false);
         }
 
         [TestMethod]
-        [TestCategory("Modify")]
         public async Task ItemIsStarredAndUnstarred()
         {
-            var itemId = (await client.GetItemsAsync()).First().Id;
+            var itemId = (await Client.GetItemsAsync()).First().Id;
 
-            Assert.IsTrue(await client.FavoriteAsync(itemId));
-            Assert.IsTrue((await client.GetItemAsync(itemId)).IsStarred);
-            Assert.IsTrue(await client.UnfavoriteAsync(itemId));
-            Assert.IsTrue((await client.GetItemAsync(itemId)).IsStarred == false);
+            Assert.IsTrue(await Client.FavoriteAsync(itemId));
+            Assert.IsTrue((await Client.GetItemAsync(itemId)).IsStarred);
+            Assert.IsTrue(await Client.UnfavoriteAsync(itemId));
+            Assert.IsTrue((await Client.GetItemAsync(itemId)).IsStarred == false);
         }
 
         [TestMethod]
-        [TestCategory("Modify")]
         public async Task ItemIsDeleted()
         {
-            var item = (await client.GetItemsAsync()).First();
+            var item = (await Client.GetItemsAsync()).First();
 
-            Assert.IsTrue(await client.DeleteAsync(item.Id));
+            Assert.IsTrue(await Client.DeleteAsync(item.Id));
 
-            var items = (await client.GetItemsAsync()).ToList();
+            var items = (await Client.GetItemsAsync()).ToList();
             CollectionAssert.DoesNotContain(items, item);
         }
 
-        private async Task<WallabagItem> SetupSampleItem()
+        public override async Task InitializeAsync()
         {
-            WallabagItem item = await client.AddAsync(
-                uri: new Uri("https://jlnostr.de/blog/dokumente-schreiben-markdown-latex-pandoc"),
-               tags: new string[] { "test", "markdown", "latex" });
-            return item;
+            _sampleItem = await Client.AddAsync(
+               uri: new Uri("https://www.wallabag.org/blog/2016/12/07/wallabagit"),
+              tags: new string[] { "wallabag", "test", "subscription" });
+
+            ItemsToDelete.Add(_sampleItem);
         }
     }
 }

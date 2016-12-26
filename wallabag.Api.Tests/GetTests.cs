@@ -7,33 +7,31 @@ using wallabag.Api.Models;
 
 namespace wallabag.Api.Tests
 {
-    public partial class GeneralTests
+    [TestClass]
+    public class GetTests : TestBaseClass
     {
         [TestMethod]
-        [TestCategory("Get")]
-        public async Task AreItemsRetrieved()
+        public async Task ItemsAreRetrieved()
         {
-            List<WallabagItem> items = (await client.GetItemsAsync()).ToList();
+            List<WallabagItem> items = (await Client.GetItemsAsync()).ToList();
             Assert.IsTrue(items.Count > 0);
         }
 
         [TestMethod]
-        [TestCategory("Get")]
         public async Task ItemRetrievedById()
         {
-            List<WallabagItem> items = (await client.GetItemsAsync()).ToList();
+            List<WallabagItem> items = (await Client.GetItemsAsync()).ToList();
 
             var firstItem = items.First();
-            var singleItem = await client.GetItemAsync(firstItem.Id);
+            var singleItem = await Client.GetItemAsync(firstItem.Id);
 
             Assert.AreEqual(firstItem, singleItem);
         }
 
         [TestMethod]
-        [TestCategory("Get")]
         public async Task ItemsRetrievedWithOneFilter()
         {
-            List<WallabagItem> items = (await client.GetItemsAsync(isRead: true)).ToList();
+            List<WallabagItem> items = (await Client.GetItemsAsync(isRead: true)).ToList();
 
             foreach (var item in items)
                 Assert.IsTrue(item.IsRead);
@@ -43,12 +41,11 @@ namespace wallabag.Api.Tests
 
 
         [TestMethod]
-        [TestCategory("Get")]
         public async Task ItemsRetrievedWithSpecificTag()
         {
-            if (await client.VersionEqualsAsync("2.1"))
+            if (await Client.VersionEqualsAsync("2.1"))
             {
-                List<WallabagItem> items = (await client.GetItemsAsync(tags: new string[] { "politik" })).ToList();
+                List<WallabagItem> items = (await Client.GetItemsAsync(tags: new string[] { "politik" })).ToList();
 
                 foreach (var item in items)
                     StringAssert.Contains(item.Tags.ToCommaSeparatedString(), "politik");
@@ -56,14 +53,13 @@ namespace wallabag.Api.Tests
         }
 
         [TestMethod]
-        [TestCategory("Get")]
         public async Task ItemsRetrievedWithMultipleTags()
         {
-            if (await client.VersionEqualsAsync("2.1"))
+            if (await Client.VersionEqualsAsync("2.1"))
             {
-                var sampleTag = (await client.GetTagsAsync()).First();
+                var sampleTag = (await Client.GetTagsAsync()).First();
 
-                List<WallabagItem> items = (await client.GetItemsAsync(tags: new string[] { sampleTag.Label })).ToList();
+                List<WallabagItem> items = (await Client.GetItemsAsync(tags: new string[] { sampleTag.Label })).ToList();
 
                 foreach (var item in items)
                     StringAssert.Contains(item.Tags.ToCommaSeparatedString(), sampleTag.Label);
@@ -72,10 +68,9 @@ namespace wallabag.Api.Tests
 
 
         [TestMethod]
-        [TestCategory("Get")]
         public async Task ItemsRetrievedWithMultipleFilters()
         {
-            List<WallabagItem> items = (await client.GetItemsAsync(isRead: true,
+            List<WallabagItem> items = (await Client.GetItemsAsync(isRead: true,
                 isStarred: false,
                 pageNumber: 1,
                 itemsPerPage: 1)).ToList();
@@ -87,14 +82,14 @@ namespace wallabag.Api.Tests
             Assert.IsTrue(firstItem.IsRead == true);
         }
 
-        [TestMethod, TestCategory("Get")]
+        [TestMethod]
         public async Task ItemsRetrievedWithSinceParameter()
         {
-            if (await client.VersionEqualsAsync("2.1"))
+            if (await Client.VersionEqualsAsync("2.1"))
             {
                 var referenceDateTime = new DateTime(2016, 09, 01);
 
-                List<WallabagItem> items = (await client.GetItemsAsync(since: referenceDateTime)).ToList();
+                List<WallabagItem> items = (await Client.GetItemsAsync(since: referenceDateTime)).ToList();
 
                 var firstItem = items.First();
 
@@ -105,10 +100,9 @@ namespace wallabag.Api.Tests
         }
 
         [TestMethod]
-        [TestCategory("Get")]
         public async Task AllPreviewImageUrisAreAbsolute()
         {
-            List<WallabagItem> items = (await client.GetItemsAsync(itemsPerPage: 1000)).ToList();
+            List<WallabagItem> items = (await Client.GetItemsAsync(itemsPerPage: 1000)).ToList();
 
             CollectionAssert.AllItemsAreUnique(items);
             Assert.IsTrue(items.Count > 0);
@@ -118,32 +112,31 @@ namespace wallabag.Api.Tests
         }
 
         [TestMethod]
-        [TestCategory("Get")]
         public async Task ExecutionOfInvalidRequestReturnsNull()
         {
-            var accessToken = client.AccessToken;
-            var refreshToken = client.RefreshToken;
+            var accessToken = Client.AccessToken;
+            var refreshToken = Client.RefreshToken;
 
-            client.AccessToken = "veryrandomkey";
-            client.RefreshToken = "anotherrandombullshit";
+            Client.AccessToken = "veryrandomkey";
+            Client.RefreshToken = "anotherrandombullshit";
 
-            var singleItem = await client.GetItemAsync(1337);
+            var singleItem = await Client.GetItemAsync(1337);
             Assert.IsNull(singleItem);
 
-            var multipleItems = await client.GetItemsAsync(itemsPerPage: 1337);
+            var multipleItems = await Client.GetItemsAsync(itemsPerPage: 1337);
             Assert.IsNull(multipleItems);
 
-            var multipleItemsWithMetadata = await client.GetItemsWithEnhancedMetadataAsync(itemsPerPage: 1337);
+            var multipleItemsWithMetadata = await Client.GetItemsWithEnhancedMetadataAsync(itemsPerPage: 1337);
             Assert.IsNull(multipleItemsWithMetadata);
 
-            var unarchivedItem = await client.UnarchiveAsync(1337);
+            var unarchivedItem = await Client.UnarchiveAsync(1337);
             Assert.IsFalse(unarchivedItem);
 
-            var starredItem = await client.FavoriteAsync(1337);
+            var starredItem = await Client.FavoriteAsync(1337);
             Assert.IsFalse(starredItem);
 
-            client.AccessToken = accessToken;
-            client.RefreshToken = refreshToken;
+            Client.AccessToken = accessToken;
+            Client.RefreshToken = refreshToken;
         }
     }
 }

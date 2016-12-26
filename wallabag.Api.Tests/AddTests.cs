@@ -1,24 +1,23 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Threading.Tasks;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace wallabag.Api.Tests
 {
-    public partial class GeneralTests
+    [TestClass]
+    public class AddTests : TestBaseClass
     {
         [TestMethod]
-        [TestCategory("Add")]
         public void AddArticleWithoutUriFails()
         {
             AssertExtensions.ThrowsExceptionAsync<ArgumentNullException>(async () =>
             {
-                await client.AddAsync(null);
+                await Client.AddAsync(null);
             });
         }
 
         [TestMethod]
-        [TestCategory("Add")]
         public async Task AddArticleWithSampleTag()
         {
             Dictionary<string, string> sampleItems = new Dictionary<string, string>()
@@ -29,14 +28,16 @@ namespace wallabag.Api.Tests
             };
 
             foreach (var item in sampleItems)
-            {
-                var result = await client.AddAsync(new Uri(item.Key), new string[] { item.Value });
+            {             
+                var result = await Client.AddAsync(new Uri(item.Key), new string[] { item.Value });
+                Assert.IsNotNull(result);
                 StringAssert.Contains(result.Tags.ToCommaSeparatedString(), item.Value);
+
+                ItemsToDelete.Add(result);
             }
         }
 
         [TestMethod]
-        [TestCategory("Add")]
         public async Task AddArticleWithGivenTitle()
         {
             Dictionary<string, string> sampleItems = new Dictionary<string, string>()
@@ -48,8 +49,11 @@ namespace wallabag.Api.Tests
 
             foreach (var item in sampleItems)
             {
-                var result = await client.AddAsync(new Uri(item.Key), title: item.Value);
+                var result = await Client.AddAsync(new Uri(item.Key), title: item.Value);
+                Assert.IsNotNull(result);
                 StringAssert.Equals(result.Title, item.Value);
+
+                ItemsToDelete.Add(result);
             }
         }
     }
