@@ -2,6 +2,7 @@
 using PropertyChanged;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace wallabag.Api.Models
 {
@@ -38,6 +39,17 @@ namespace wallabag.Api.Models
 
         [JsonProperty("ranges")]
         public IList<WallabagAnnotationRange> Ranges { get; set; } = new List<WallabagAnnotationRange>();
+
+        public WallabagAnnotationRange Range
+        {
+            get
+            {
+                if (Ranges.Count == 1)
+                    return Ranges[0];
+                else
+                    return null;
+            }
+        }
 
         public WallabagAnnotation() { }
         public WallabagAnnotation(WallabagAnnotationRange range, string text, string quote = "") : this()
