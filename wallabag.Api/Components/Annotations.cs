@@ -16,7 +16,7 @@ namespace wallabag.Api
             string jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, $"/annotations/{itemId}", cancellationToken);
             var result = await ParseJsonFromStringAsync<WallabagAnnotationRoot>(jsonString, cancellationToken);
 
-            return result.Annotations ?? new List<WallabagAnnotation>();
+            return result.Annotations;
         }
 
         public Task<WallabagAnnotation> AddAnnotationAsync(WallabagItem item, WallabagAnnotation annotation, CancellationToken cancellationToken = default(CancellationToken))
