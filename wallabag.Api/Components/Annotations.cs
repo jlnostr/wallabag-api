@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using wallabag.Api.Models;
@@ -21,6 +23,8 @@ namespace wallabag.Api
             => AddAnnotationAsync(item.Id, annotation, cancellationToken);
         public async Task<WallabagAnnotation> AddAnnotationAsync(int itemId, WallabagAnnotation annotation, CancellationToken cancellationToken = default(CancellationToken))
         {
+            CheckValidityOfAnnotation(annotation);
+
             var parameters = new Dictionary<string, object>
             {
                 { "ranges", annotation.Ranges },
@@ -40,6 +44,8 @@ namespace wallabag.Api
             => UpdateAnnotationAsync(oldAnnotation.Id, newAnnotation, cancellationToken);
         public async Task<WallabagAnnotation> UpdateAnnotationAsync(int oldAnnotationId, WallabagAnnotation newAnnotation, CancellationToken cancellationToken = default(CancellationToken))
         {
+            CheckValidityOfAnnotation(newAnnotation);
+
             var parameters = new Dictionary<string, object>
             {
                 { "ranges", newAnnotation.Ranges },
@@ -59,5 +65,27 @@ namespace wallabag.Api
             => DeleteAnnotationAsync(annotation.Id, cancellationToken);
         public async Task<bool> DeleteAnnotationAsync(int annotationId, CancellationToken cancellationToken = default(CancellationToken))
             => !string.IsNullOrEmpty(await ExecuteHttpRequestAsync(HttpRequestMethod.Delete, $"/annotations/{annotationId}", cancellationToken));
+
+        private void CheckValidityOfAnnotation(WallabagAnnotation annotation)
+        {
+            var regex = new Regex(@"^/[a-z]{1,}\[[0-9]{1,}\]");
+
+            if (annotation == null)
+                throw new ArgumentNullException(nameof(annotation));
+
+            if (annotation.Ranges.Count == 0)
+                throw new ArgumentOutOfRangeException("annotation.Ranges.Count");
+
+            foreach (var range in annotation.Ranges)
+            {
+                if (string.IsNullOrWhiteSpace(range.Start) ||
+                    regex.Match(range.Start).Success == false)
+                    throw new FormatException("The start of the range doesn't equal the required format: /<tag-name>[offset]");
+
+                if (string.IsNullOrWhiteSpace(range.End) ||
+                    regex.Match(range.End).Success == false)
+                    throw new FormatException("The end of the range doesn't equal the required format: /<tag-name>[offset]");
+            }
+        }
     }
 }
