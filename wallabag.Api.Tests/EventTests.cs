@@ -3,34 +3,33 @@ using System.Threading.Tasks;
 
 namespace wallabag.Api.Tests
 {
-    public partial class GeneralTests
+    [TestClass]
+    public class EventTests : TestBaseClass
     {
         [TestMethod]
-        [TestCategory("Events")]
         public void CredentialsRefreshedEventIsFiredCorrect()
         {
-            var oldAccessToken = client.AccessToken;
-            var oldRefreshToken = client.RefreshToken;
-            var oldRefreshDateTime = client.LastTokenRefreshDateTime;
+            var oldAccessToken = Client.AccessToken;
+            var oldRefreshToken = Client.RefreshToken;
+            var oldRefreshDateTime = Client.LastTokenRefreshDateTime;
 
-            client.CredentialsRefreshed += (s, e) =>
+            Client.CredentialsRefreshed += (s, e) =>
             {
-                Assert.IsNotNull(client.AccessToken);
-                Assert.IsNotNull(client.RefreshToken);
-                Assert.IsNotNull(client.LastTokenRefreshDateTime);
-                Assert.AreNotEqual(oldAccessToken, client.AccessToken);
-                Assert.AreNotEqual(oldRefreshToken, client.RefreshToken);
-                Assert.AreNotEqual(oldRefreshDateTime, client.LastTokenRefreshDateTime);
+                Assert.IsNotNull(Client.AccessToken);
+                Assert.IsNotNull(Client.RefreshToken);
+                Assert.IsNotNull(Client.LastTokenRefreshDateTime);
+                Assert.AreNotEqual(oldAccessToken, Client.AccessToken);
+                Assert.AreNotEqual(oldRefreshToken, Client.RefreshToken);
+                Assert.AreNotEqual(oldRefreshDateTime, Client.LastTokenRefreshDateTime);
             };
         }
 
         [TestMethod]
-        [TestCategory("Events")]
         public async Task PreRequestEventContainsCorrectEventArgs()
         {
-            client.PreRequestExecution += Client_PreRequestExecution;
-            await client.DeleteAsync(999999);
-            client.PreRequestExecution -= Client_PreRequestExecution;
+            Client.PreRequestExecution += Client_PreRequestExecution;
+            await Client.DeleteAsync(999999);
+            Client.PreRequestExecution -= Client_PreRequestExecution;
         }
 
         private void Client_PreRequestExecution(object sender, PreRequestExecutionEventArgs e)
@@ -43,14 +42,13 @@ namespace wallabag.Api.Tests
         }
 
         [TestMethod]
-        [TestCategory("Events")]
         public async Task AfterRequestEventContainsCorrectEventArgs()
         {
-            client.AfterRequestExecution += Client_AfterRequestExecution;
+            Client.AfterRequestExecution += Client_AfterRequestExecution;
 
-            await client.DeleteAsync(123456789);
+            await Client.DeleteAsync(123456789);
 
-            client.AfterRequestExecution -= Client_AfterRequestExecution;
+            Client.AfterRequestExecution -= Client_AfterRequestExecution;
         }
 
         private void Client_AfterRequestExecution(object sender, System.Net.Http.HttpResponseMessage e)
