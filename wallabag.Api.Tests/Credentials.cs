@@ -4,10 +4,10 @@
     {
         // Enter your own credentials here or use the sample data below.
 
-        public const string wallabagUrl = "https://wallabag.jlnostr.de";
-        public const string username = "wallabag";
-        public const string password = "g7idJ8jzpaUQfakz19mqkiDbwrot55f6";
-        public const string clientId = "4_1bblj107c7j4g8ss44co488sk80k8koscwowwo0wcsg08wk8w8";
-        public const string clientSecret = "rzurdc5w7u8og408kwcs4wc4kwgoo808ggocwsgg0gs80480c";
+        public const string wallabagUrl = "https://app.wallabag.it";
+        public const string username = "jlnostr";
+        public const string password = "wusveubrxhgday}Aq;^imzR2wrrePhg-t2uairbzTd8fmt+5jvk@ykpcCcn2ebmr";
+        public const string clientId = "22_5r6p9q0xsi8ssgk4ogwcw8w0s8cwoo4w4woo0swc80o4g4ow0c";
+        public const string clientSecret = "47izfj2sfmgw8ggg0sk8csoc844oswkok0g40osckgs48ks8c8";
     }
 }
