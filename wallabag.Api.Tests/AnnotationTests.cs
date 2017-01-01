@@ -24,51 +24,66 @@ namespace wallabag.Api.Tests
         [TestMethod]
         public async Task AddAnnotation()
         {
-            var newAnnotation = CreateSampleAnnotation("My new annotation");
-            _sampleAnnotation = await Client.AddAnnotationAsync(_sampleItem, newAnnotation);
+            if (await Client.MinorIsGreaterOrEqualAsync(2))
+            {
+                var newAnnotation = CreateSampleAnnotation("My new annotation");
+                _sampleAnnotation = await Client.AddAnnotationAsync(_sampleItem, newAnnotation);
 
-            Assert.IsNotNull(_sampleAnnotation);
-            Assert.IsTrue(_sampleAnnotation.Id > 0);
+                Assert.IsNotNull(_sampleAnnotation);
+                Assert.IsTrue(_sampleAnnotation.Id > 0);
+            }
         }
 
         [TestMethod]
         public async Task GetAnnotations()
         {
-            var annotations = await Client.GetAnnotationsAsync(_sampleItem);
+            if (await Client.MinorIsGreaterOrEqualAsync(2))
+            {
+                var annotations = await Client.GetAnnotationsAsync(_sampleItem);
 
-            Assert.IsNotNull(annotations);
-            Assert.IsTrue(annotations.ToList().Count > 0);
+                Assert.IsNotNull(annotations);
+                Assert.IsTrue(annotations.ToList().Count > 0);
+            }
         }
 
         [TestMethod]
         public async Task DeleteAnnotation()
         {
-            await EnsureValidityOfSampleAnnotationAsync();
+            if (await Client.MinorIsGreaterOrEqualAsync(2))
+            {
+                await EnsureValidityOfSampleAnnotationAsync();
 
-            bool result = await Client.DeleteAnnotationAsync(_sampleAnnotation);
-            Assert.IsTrue(result);
+                bool result = await Client.DeleteAnnotationAsync(_sampleAnnotation);
+                Assert.IsTrue(result);
 
-            var annotations = await Client.GetAnnotationsAsync(_sampleItem);
-            Assert.IsTrue(annotations.Contains(_sampleAnnotation) == false);
+                var annotations = await Client.GetAnnotationsAsync(_sampleItem);
+                Assert.IsTrue(annotations.Contains(_sampleAnnotation) == false);
+            }
         }
 
         [TestMethod]
         public async Task UpdateAnnotation()
         {
-            await EnsureValidityOfSampleAnnotationAsync();
+            if (await Client.MinorIsGreaterOrEqualAsync(2))
+            {
+                await EnsureValidityOfSampleAnnotationAsync();
 
-            _sampleAnnotation.Text = "This is my new text";
+                _sampleAnnotation.Text = "This is my new text";
 
-            var newAnnotation = await Client.UpdateAnnotationAsync(_sampleAnnotation, _sampleAnnotation);
-            Assert.IsNotNull(newAnnotation);
-            Assert.IsTrue(newAnnotation.Text == _sampleAnnotation.Text);
+                var newAnnotation = await Client.UpdateAnnotationAsync(_sampleAnnotation, _sampleAnnotation);
+                Assert.IsNotNull(newAnnotation);
+                Assert.IsTrue(newAnnotation.Text == _sampleAnnotation.Text);
+            }
         }
 
         [TestMethod]
         public async Task DeleteAnnotationWithInvalidIdFails()
         {
-            bool result = await Client.DeleteAnnotationAsync(999999999);
-            Assert.IsFalse(result);
+            if (await Client.MinorIsGreaterOrEqualAsync(2))
+            {
+                bool result = await Client.DeleteAnnotationAsync(999999999);
+                Assert.IsFalse(result);
+            }
         }
 
         [TestMethod]
@@ -108,7 +123,7 @@ namespace wallabag.Api.Tests
 
         private async Task EnsureValidityOfSampleAnnotationAsync()
         {
-            if (_sampleAnnotation == null || _sampleAnnotation.Id == 0)
+            if ((_sampleAnnotation == null || _sampleAnnotation.Id == 0) && await Client.MinorIsGreaterOrEqualAsync(2))
             {
                 _sampleAnnotation = await Client.AddAnnotationAsync(_sampleItem, CreateSampleAnnotation());
                 Assert.IsNotNull(_sampleAnnotation);

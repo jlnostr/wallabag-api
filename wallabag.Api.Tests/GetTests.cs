@@ -43,7 +43,7 @@ namespace wallabag.Api.Tests
         [TestMethod]
         public async Task ItemsRetrievedWithSpecificTag()
         {
-            if (await Client.VersionEqualsAsync("2.1"))
+            if (await Client.MinorIsGreaterOrEqualAsync(1))
             {
                 List<WallabagItem> items = (await Client.GetItemsAsync(tags: new string[] { "politik" })).ToList();
 
@@ -55,7 +55,7 @@ namespace wallabag.Api.Tests
         [TestMethod]
         public async Task ItemsRetrievedWithMultipleTags()
         {
-            if (await Client.VersionEqualsAsync("2.1"))
+            if (await Client.MinorIsGreaterOrEqualAsync(1))
             {
                 var sampleTag = (await Client.GetTagsAsync()).First();
 
@@ -85,7 +85,7 @@ namespace wallabag.Api.Tests
         [TestMethod]
         public async Task ItemsRetrievedWithSinceParameter()
         {
-            if (await Client.VersionEqualsAsync("2.1"))
+            if (await Client.MinorIsGreaterOrEqualAsync(1))
             {
                 var referenceDateTime = new DateTime(2016, 09, 01);
 

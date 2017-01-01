@@ -57,10 +57,10 @@ namespace wallabag.Api.Tests
                 RefreshToken = client.RefreshToken
             };
         }
-        public static async Task<bool> VersionEqualsAsync(this WallabagClient client, string version)
+        public static async Task<bool> MinorIsGreaterOrEqualAsync(this WallabagClient client, int minor)
         {
-            var clientVersion = await client.GetVersionNumberAsync();
-            return clientVersion.Contains(version);
+            var version = await client.GetVersionAsync();
+            return version.Minor >= minor;
         }
     }
 }

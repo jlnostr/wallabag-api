@@ -53,7 +53,7 @@ namespace wallabag.Api.Tests
         [TestMethod]
         public async Task TagIsRemovedFromAllItems()
         {
-            if (await Client.VersionEqualsAsync("2.1"))
+            if (await Client.MinorIsGreaterOrEqualAsync(1))
             {
                 var tag = (await Client.GetTagsAsync()).First();
                 Assert.IsTrue(await Client.RemoveTagFromAllItemsAsync(tag));
@@ -66,7 +66,7 @@ namespace wallabag.Api.Tests
         [TestMethod]
         public async Task TagsAreRemovedFromAllItems()
         {
-            if (await Client.VersionEqualsAsync("2.1"))
+            if (await Client.MinorIsGreaterOrEqualAsync(1))
             {
                 var testTags = (await Client.GetTagsAsync()).Take(2);
                 var testTagsStringArray = testTags.ToCommaSeparatedString().Split(","[0]);
