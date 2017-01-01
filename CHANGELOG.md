@@ -1,3 +1,10 @@
+## 1.3.5
+- Add support for annotations (feature of 2.2)
+- Add `GetVersionAsync` method
+
+## 1.3.4
+- Fix a bug with automatic token refresh.
+
 ## 1.3.3
 - Add an optional `cancellationToken` to each async method
 - Add the `Accept: application\json` header to each request (fixes HTTP code 406 on wallabag.it)
