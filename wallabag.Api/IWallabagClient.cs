@@ -16,6 +16,7 @@ namespace wallabag.Api
         string RefreshToken { get; set; }
 
         Task<string> GetVersionNumberAsync(CancellationToken cancellationToken = default(CancellationToken));
+        Task<Version> GetVersionAsync(CancellationToken cancellationToken = default(CancellationToken));
 
         Task<string> GetAccessTokenAsync(CancellationToken cancellationToken = default(CancellationToken));
         Task<bool> RefreshAccessTokenAsync(CancellationToken cancellationToken = default(CancellationToken));

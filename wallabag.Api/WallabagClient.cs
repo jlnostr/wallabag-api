@@ -69,6 +69,16 @@ namespace wallabag.Api
             return await ParseJsonFromStringAsync<string>(jsonString, cancellationToken);
         }
 
+        /// <summary>
+        /// Returns the version number of the current wallabag instance as <see cref="Version"/>
+        /// </summary>
+        public async Task<Version> GetVersionAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            string versionNumber = await GetVersionNumberAsync(cancellationToken);
+            Version.TryParse(versionNumber, out Version result);
+            return result;
+        }
+
         private async Task<string> ExecuteHttpRequestAsync(HttpRequestMethod httpRequestMethod, string relativeUriString, CancellationToken cancellationToken, Dictionary<string, object> parameters = default(Dictionary<string, object>), bool requiresAuthentication = true)
         {
             cancellationToken.ThrowIfCancellationRequested();
