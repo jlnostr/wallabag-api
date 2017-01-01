@@ -36,5 +36,15 @@ namespace wallabag.Api.Tests
                 return Task.CompletedTask;
             });
         }
+
+        [TestMethod]
+        public async Task VersionReturnsValidValue()
+        {
+            var version = await Client.GetVersionAsync();
+            Assert.IsNotNull(version);
+            Assert.IsTrue(version.Major == 2);
+            Assert.IsTrue(version.Minor >= 0);
+            Assert.IsTrue(version.Build >= 0);
+        }
     }
 }
