@@ -119,7 +119,7 @@ namespace wallabag.Api.Models
     public class WallabagAnnotationRange
     {
         /// <summary>
-        /// The start element of the annotation. Expected style: /<tag-name>[index]
+        /// The start element of the annotation.
         /// </summary>
         [JsonProperty("start")]
         public string Start { get; set; }
@@ -131,7 +131,7 @@ namespace wallabag.Api.Models
         public int StartOffset { get; set; }
 
         /// <summary>
-        /// The end element of the annotation. Expected style: /<tag-name>[index]
+        /// The end element of the annotation.
         /// </summary>
         [JsonProperty("end")]
         public string End { get; set; }
@@ -150,9 +150,9 @@ namespace wallabag.Api.Models
         /// <summary>
         /// Creates a new range with the given values.
         /// </summary>
-        /// <param name="start">The start element of the annotation. Expected style: /<tag-name>[index]</param>
+        /// <param name="start">The start element of the annotation.</param>
         /// <param name="startOffset">The start offset inside <see cref="Start"/>.</param>
-        /// <param name="end">The end element of the annotation. Expected style: /<tag-name>[index]</param>
+        /// <param name="end">The end element of the annotation.</param>
         /// <param name="endOffset">The end offset inside <see cref="End"/>.</param>
         public WallabagAnnotationRange(string start, int startOffset, string end, int endOffset)
         {
