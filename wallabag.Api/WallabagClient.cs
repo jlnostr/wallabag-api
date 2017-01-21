@@ -70,12 +70,15 @@ namespace wallabag.Api
         }
 
         /// <summary>
-        /// Returns the version number of the current wallabag instance as <see cref="Version"/>
+        /// Returns the version number of the current wallabag instance as <see cref="Version"/>.
         /// </summary>
         public async Task<Version> GetVersionAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             string versionNumber = await GetVersionNumberAsync(cancellationToken);
-            Version.TryParse(versionNumber, out Version result);
+
+            Version result;
+            Version.TryParse(versionNumber, out result);
+
             return result;
         }
 
