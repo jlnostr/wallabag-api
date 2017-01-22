@@ -1,3 +1,6 @@
+## 1.3.6 and newer
+I've switched to Continous Deployment for this API. To have a look at the latest changes, please have a look at [the Git history](https://github.com/jlnostr/wallabag-api/commits/master).
+
 ## 1.3.5
 - Add support for annotations (feature of 2.2)
 - Add `GetVersionAsync` method
