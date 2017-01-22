@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using wallabag.Api.Models;
+using wallabag.Api.Responses;
 using static wallabag.Api.WallabagClient;
 
 namespace wallabag.Api
@@ -107,6 +108,29 @@ namespace wallabag.Api
             CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
+        /// Fetches a list of articles with additional metadata from the server.
+        /// </summary>
+        /// <param name="isRead">Filters the list by read articles that have the given value.</param>
+        /// <param name="isStarred">Filters the list by starred articles that have the given value.</param>
+        /// <param name="dateOrder">Defines the ordering by date.</param>
+        /// <param name="sortOrder">Defines the ordering by ascending/descending.</param>
+        /// <param name="pageNumber">The page number.</param>
+        /// <param name="itemsPerPage">The number of items per page.</param>
+        /// <param name="since">Filters items where the <see cref="WallabagItem.LastUpdated"/> value is greater or equal to the given value.<para>Requires wallabag 2.1 or greater.</para></param>
+        /// <param name="tags">Filters items by the given list of tags.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        Task<ItemCollectionResponse> GetItemsWithEnhancedMetadataAsync(
+           bool? isRead = null,
+           bool? isStarred = null,
+           WallabagDateOrder? dateOrder = null,
+           WallabagSortOrder? sortOrder = null,
+           int? pageNumber = null,
+           int? itemsPerPage = null,
+           DateTime? since = null,
+           IEnumerable<string> tags = null,
+           CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
         /// Fetches one item from the server.
         /// </summary>
         /// <param name="itemId">The id of the item.</param>
@@ -209,7 +233,7 @@ namespace wallabag.Api
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A list of <see cref="WallabagTag"/>.</returns>
         Task<IEnumerable<WallabagTag>> AddTagsAsync(int itemId, IEnumerable<string> tags, CancellationToken cancellationToken = default(CancellationToken));
-        
+
         /// <summary>
         /// Adds tags to an item.
         /// </summary>
