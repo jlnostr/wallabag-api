@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using wallabag.Api.Models;
@@ -39,6 +40,21 @@ namespace wallabag.Api
         /// <para>In most cases this property is set automatically after an execution of <see cref="GetAccessTokenAsync(CancellationToken)" /> or <see cref="RefreshAccessTokenAsync(CancellationToken)"/>.</para>
         /// </summary>
         string RefreshToken { get; set; }
+
+        /// <summary>
+        /// Gets or sets if exceptions should be thrown.
+        /// </summary>
+        bool ThrowHttpExceptions { get; set; }
+
+        /// <summary>
+        /// Gets the timeout in milliseconds for each HTTP request.
+        /// </summary>
+        TimeSpan Timeout { get; }
+
+        /// <summary>
+        /// The DateTime value that specifies the last execution method of <see cref="RefreshAccessTokenAsync"/>.
+        /// </summary>
+        DateTime LastTokenRefreshDateTime { get; set; }
 
         /// <summary>
         /// Returns the version number of the API as plain string.
@@ -352,5 +368,20 @@ namespace wallabag.Api
         /// <param name="annotationId">The ID of the annotation that should be deleted.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         Task<bool> DeleteAnnotationAsync(int annotationId, CancellationToken cancellationToken = default(CancellationToken));
+        
+        /// <summary>
+        /// Event that is fired if <see cref="RefreshAccessTokenAsync"/> was successful.
+        /// </summary>
+        event EventHandler CredentialsRefreshed;
+
+        /// <summary>
+        /// Event that is fired before a HTTP request to the server is started.
+        /// </summary>
+        event EventHandler<PreRequestExecutionEventArgs> PreRequestExecution;
+
+        /// <summary>
+        /// Event that is fired after the HTTP request is complete.
+        /// </summary>
+        event EventHandler<HttpResponseMessage> AfterRequestExecution;
     }
 }
