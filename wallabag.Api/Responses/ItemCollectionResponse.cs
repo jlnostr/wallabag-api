@@ -42,8 +42,14 @@ namespace wallabag.Api.Responses
         [JsonIgnore]
         public IEnumerable<WallabagItem> Items
         {
-            get { return _Embedded.Items; }
-            set { _Embedded.Items = value; }
+            get { return _Embedded?.Items; }
+            set
+            {
+                if (_Embedded == null)
+                    _Embedded = new Embedded();
+
+                _Embedded.Items = value;
+            }
         }
     }
     class Embedded

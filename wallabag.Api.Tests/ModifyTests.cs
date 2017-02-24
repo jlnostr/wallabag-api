@@ -1,8 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using wallabag.Api.Models;
+using wallabag.Api.Responses;
 
 namespace wallabag.Api.Tests
 {
@@ -52,6 +54,16 @@ namespace wallabag.Api.Tests
 
             var items = (await Client.GetItemsAsync()).ToList();
             CollectionAssert.DoesNotContain(items, item);
+        }
+
+        [TestMethod]
+        public void ItemsOfAManuallyCreatedItemCollectionResponseCanBeModified()
+        {
+            var resp = new ItemCollectionResponse();
+            Assert.IsNull(resp.Items);
+
+            resp.Items = new List<WallabagItem>();
+            Assert.IsNotNull(resp.Items);
         }
 
         public override async Task InitializeAsync()
