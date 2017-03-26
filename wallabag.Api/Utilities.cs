@@ -20,18 +20,5 @@ namespace wallabag.Api
         /// Returns 0 if false, otherwise 1.
         /// </summary>
         internal static int ToInt(this bool input) => input ? 1 : 0;
-
-        internal static Task<HttpResponseMessage> TryPostAsync(this HttpClient client, Uri requestUri, HttpContent content, bool throwExceptions, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            return client.PostAsync(requestUri, content, cancellationToken).ContinueWith<HttpResponseMessage>(task =>
-            {
-                if (task.Exception != null && throwExceptions)
-                    throw task.Exception;
-                if (task.Exception != null && throwExceptions == false)
-                    return new HttpResponseMessage(System.Net.HttpStatusCode.NotFound);
-                else
-                    return task.Result;
-            });
-        }
     }
 }
