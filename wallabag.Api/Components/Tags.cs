@@ -12,10 +12,7 @@ namespace wallabag.Api
         /// Returns a list of all available tags.
         /// </summary>
         public async Task<IEnumerable<WallabagTag>> GetTagsAsync(CancellationToken cancellationToken = default(CancellationToken))
-        {
-            var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, "/tags", cancellationToken);
-            return await ParseJsonFromStringAsync<IEnumerable<WallabagTag>>(jsonString, cancellationToken);
-        }
+            => await ExecuteHttpRequestAsync<IEnumerable<WallabagTag>>(HttpRequestMethod.Get, BuildApiRequestUri("/tags"), cancellationToken);
 
         #region AddTagsAsync            
         /// <summary>
@@ -24,7 +21,8 @@ namespace wallabag.Api
         /// <param name="item">The item.</param>
         /// <param name="tags">The tags that should be added.</param>
         /// <returns>A list of all tags of the updated item with their specific id.</returns>
-        public Task<IEnumerable<WallabagTag>> AddTagsAsync(WallabagItem item, IEnumerable<string> tags, CancellationToken cancellationToken = default(CancellationToken)) => AddTagsAsync(item.Id, tags, cancellationToken);
+        public Task<IEnumerable<WallabagTag>> AddTagsAsync(WallabagItem item, IEnumerable<string> tags, CancellationToken cancellationToken = default(CancellationToken))
+            => AddTagsAsync(item.Id, tags, cancellationToken);
 
         /// <summary>
         /// Adds tags to an item.
@@ -34,12 +32,11 @@ namespace wallabag.Api
         /// <returns>A list of all tags of the updated item with their specific id.</returns>
         public async Task<IEnumerable<WallabagTag>> AddTagsAsync(int itemId, IEnumerable<string> tags, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Post, $"/entries/{itemId}/tags", cancellationToken, new Dictionary<string, object>() { ["tags"] = tags.ToCommaSeparatedString() });
-            var returnedItem = await ParseJsonFromStringAsync<WallabagItem>(jsonString, cancellationToken);
+            var returnedItem = await ExecuteHttpRequestAsync<WallabagItem>(HttpRequestMethod.Post, BuildApiRequestUri($"/entries/{itemId}/tags"), cancellationToken, new Dictionary<string, object>() { ["tags"] = tags.ToCommaSeparatedString() });
             var itemTags = returnedItem?.Tags as List<WallabagTag>;
 
             // Check if the tags are in the returned item
-            foreach (var item in tags)
+            foreach (string item in tags)
                 if (itemTags?.Where(t => t.Label == item).Count() != 1)
                     return default(IEnumerable<WallabagTag>);
 
@@ -58,16 +55,16 @@ namespace wallabag.Api
         /// <returns>True, if the action was successful.</returns>
         public async Task<bool> RemoveTagsAsync(int itemId, IEnumerable<WallabagTag> tags, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var lastJson = string.Empty;
+            WallabagItem lastItem = default(WallabagItem);
+
             foreach (var item in tags)
             {
-                lastJson = await ExecuteHttpRequestAsync(HttpRequestMethod.Delete, $"/entries/{itemId}/tags/{item.Id}", cancellationToken);
-                if (lastJson == null)
+                lastItem = await ExecuteHttpRequestAsync<WallabagItem>(HttpRequestMethod.Delete, BuildApiRequestUri($"/entries/{itemId}/tags/{item.Id}"), cancellationToken);
+                if (lastItem == null)
                     return false;
             }
 
-            var returnedItem = await ParseJsonFromStringAsync<WallabagItem>(lastJson, cancellationToken);
-            var itemTags = returnedItem?.Tags as List<WallabagTag>;
+            var itemTags = lastItem?.Tags as List<WallabagTag>;
 
             // Check if the tags aren't no longer in the returned item
             foreach (var item in tags)
@@ -101,12 +98,10 @@ namespace wallabag.Api
         /// <param name="tag">The tag that should be deleted.</param>
         /// <returns>True, if the action was successful.</returns>
         public async Task<bool> RemoveTagFromAllItemsAsync(string tag, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            return await ExecuteHttpRequestAsync(HttpRequestMethod.Delete, "/tag/label", cancellationToken, new Dictionary<string, object>()
+            => await ExecuteHttpRequestAsync<object>(HttpRequestMethod.Delete, BuildApiRequestUri("/tag/label"), cancellationToken, new Dictionary<string, object>()
             {
                 ["tag"] = tag
             }) != null;
-        }
 
         /// <summary>
         /// Removes one or more tags from all items.
@@ -122,12 +117,10 @@ namespace wallabag.Api
         /// <param name="tags">A list with all the tags that should be deleted.</param>
         /// <returns>True, if the action was successful.</returns>
         public async Task<bool> RemoveTagsFromAllItemsAsync(IEnumerable<string> tags, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            return await ExecuteHttpRequestAsync(HttpRequestMethod.Delete, "/tags/label", cancellationToken,
+            => await ExecuteHttpRequestAsync<object>(HttpRequestMethod.Delete, BuildApiRequestUri("/tags/label"), cancellationToken,
                 new Dictionary<string, object>()
                 {
                     ["tags"] = tags.ToCommaSeparatedString()
                 }) != null;
-        }
     }
 }

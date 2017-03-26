@@ -20,16 +20,17 @@ namespace wallabag.Api
             if (string.IsNullOrEmpty(uri.ToString()))
                 throw new ArgumentNullException(nameof(uri));
 
-            Dictionary<string, object> parameters = new Dictionary<string, object>();
-            parameters.Add("url", uri);
+            var parameters = new Dictionary<string, object>
+            {
+                { "url", uri }
+            };
 
             if (tags != null)
                 parameters.Add("tags", tags.ToCommaSeparatedString());
             if (title != null)
                 parameters.Add("title", title);
 
-            var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Post, "/entries", cancellationToken, parameters);
-            return await ParseJsonFromStringAsync<WallabagItem>(jsonString, cancellationToken);
+            return await ExecuteHttpRequestAsync<WallabagItem>(HttpRequestMethod.Post, BuildApiRequestUri("/entries"), cancellationToken, parameters);
         }
     }
 }

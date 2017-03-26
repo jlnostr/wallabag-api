@@ -64,9 +64,9 @@ namespace wallabag.Api
             Dictionary<string, object> parameters = new Dictionary<string, object>();
 
             if (isRead != null)
-                parameters.Add("archive", ((bool)isRead).ToInt());
+                parameters.Add("archive", ((bool)isRead));
             if (isStarred != null)
-                parameters.Add("starred", ((bool)isStarred).ToInt());
+                parameters.Add("starred", ((bool)isStarred));
             if (dateOrder != null)
                 parameters.Add("sort", (dateOrder == WallabagDateOrder.ByCreationDate ? "created" : "updated"));
             if (sortOrder != null)
@@ -80,8 +80,7 @@ namespace wallabag.Api
             if (tags != null)
                 parameters.Add("tags", System.Net.WebUtility.HtmlEncode(tags.ToCommaSeparatedString()));
 
-            var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, "/entries", cancellationToken, parameters);
-            var response = await ParseJsonFromStringAsync<ItemCollectionResponse>(jsonString, cancellationToken);
+            var response = await ExecuteHttpRequestAsync<ItemCollectionResponse>(HttpRequestMethod.Get, BuildApiRequestUri("/entries"), cancellationToken, parameters);
 
             if (response != null)
                 foreach (var item in response.Items)
@@ -97,8 +96,7 @@ namespace wallabag.Api
         /// <returns><see cref="WallabagItem"/></returns>
         public async Task<WallabagItem> GetItemAsync(int itemId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, $"/entries/{itemId}", cancellationToken);
-            var result = await ParseJsonFromStringAsync<WallabagItem>(jsonString, cancellationToken);
+            var result = await ExecuteHttpRequestAsync<WallabagItem>(HttpRequestMethod.Get, BuildApiRequestUri($"/entries/{itemId}"), cancellationToken);
             CheckUriOfItem(result);
             return result;
         }

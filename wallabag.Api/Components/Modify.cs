@@ -18,8 +18,7 @@ namespace wallabag.Api
             if (itemId == 0)
                 throw new ArgumentNullException(nameof(itemId));
 
-            var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Patch, $"/entries/{itemId}", cancellationToken, new Dictionary<string, object>() { ["archive"] = true.ToInt() });
-            var item = await ParseJsonFromStringAsync<WallabagItem>(jsonString, cancellationToken);
+            var item = await ExecuteHttpRequestAsync<WallabagItem>(HttpRequestMethod.Patch, BuildApiRequestUri($"/entries/{itemId}"), cancellationToken, new Dictionary<string, object>() { ["archive"] = true });
 
             return item?.IsRead == true;
         }
@@ -34,8 +33,7 @@ namespace wallabag.Api
             if (itemId == 0)
                 throw new ArgumentNullException(nameof(itemId));
 
-            var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Patch, $"/entries/{itemId}", cancellationToken, new Dictionary<string, object>() { ["archive"] = false.ToInt() });
-            var item = await ParseJsonFromStringAsync<WallabagItem>(jsonString, cancellationToken);
+            var item = await ExecuteHttpRequestAsync<WallabagItem>(HttpRequestMethod.Patch, BuildApiRequestUri($"/entries/{itemId}"), cancellationToken, new Dictionary<string, object>() { ["archive"] = false });
 
             return item?.IsRead == false;
         }
@@ -50,8 +48,7 @@ namespace wallabag.Api
             if (itemId == 0)
                 throw new ArgumentNullException(nameof(itemId));
 
-            var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Patch, $"/entries/{itemId}", cancellationToken, new Dictionary<string, object>() { ["starred"] = true.ToInt() });
-            var item = await ParseJsonFromStringAsync<WallabagItem>(jsonString, cancellationToken);
+            var item = await ExecuteHttpRequestAsync<WallabagItem>(HttpRequestMethod.Patch, BuildApiRequestUri($"/entries/{itemId}"), cancellationToken, new Dictionary<string, object>() { ["starred"] = true });
 
             return item?.IsStarred == true;
         }
@@ -66,8 +63,7 @@ namespace wallabag.Api
             if (itemId == 0)
                 throw new ArgumentNullException(nameof(itemId));
 
-            var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Patch, $"/entries/{itemId}", cancellationToken, new Dictionary<string, object>() { ["starred"] = false.ToInt() });
-            var item = await ParseJsonFromStringAsync<WallabagItem>(jsonString, cancellationToken);
+            var item = await ExecuteHttpRequestAsync<WallabagItem>(HttpRequestMethod.Patch, BuildApiRequestUri($"/entries/{itemId}"), cancellationToken, new Dictionary<string, object>() { ["starred"] = false });
 
             return item?.IsStarred == false;
         }
@@ -82,7 +78,7 @@ namespace wallabag.Api
             if (itemId == 0)
                 throw new ArgumentNullException(nameof(itemId));
 
-            await ExecuteHttpRequestAsync(HttpRequestMethod.Delete, $"/entries/{itemId}", cancellationToken);
+            await ExecuteHttpRequestAsync<object>(HttpRequestMethod.Delete, BuildApiRequestUri($"/entries/{itemId}"), cancellationToken);
 
             //TODO: Better check for actual result.
             return true;

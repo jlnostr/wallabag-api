@@ -23,12 +23,7 @@ namespace wallabag.Api
         /// <param name="itemId">The ID of the item for which the annotations should be retrieved.</param>
         /// <returns>If successful, a list of <see cref="WallabagAnnotation"/> items, otherwise null.</returns>
         public async Task<IEnumerable<WallabagAnnotation>> GetAnnotationsAsync(int itemId, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            string jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, $"/annotations/{itemId}", cancellationToken);
-            var result = await ParseJsonFromStringAsync<WallabagAnnotationRoot>(jsonString, cancellationToken);
-
-            return result.Annotations;
-        }
+            => (await ExecuteHttpRequestAsync<WallabagAnnotationRoot>(HttpRequestMethod.Get, BuildApiRequestUri($"/annotations/{itemId}"), cancellationToken))?.Annotations;
 
         /// <summary>
         /// Adds a <see cref="WallabagAnnotation"/> to a specific item.
@@ -38,7 +33,7 @@ namespace wallabag.Api
         /// <returns>If successful, the new <see cref="WallabagAnnotation"/>, otherwise null.</returns>
         public Task<WallabagAnnotation> AddAnnotationAsync(WallabagItem item, WallabagAnnotation annotation, CancellationToken cancellationToken = default(CancellationToken))
             => AddAnnotationAsync(item.Id, annotation, cancellationToken);
-        
+
         /// <summary>
         /// Adds a <see cref="WallabagAnnotation"/> to a specific item.
         /// </summary>
@@ -58,8 +53,7 @@ namespace wallabag.Api
             if (!string.IsNullOrEmpty(annotation.Quote))
                 parameters.Add("quote", annotation.Quote);
 
-            string jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Post, $"/annotations/{itemId}", cancellationToken, parameters);
-            var result = await ParseJsonFromStringAsync<WallabagAnnotation>(jsonString, cancellationToken);
+            var result = await ExecuteHttpRequestAsync<WallabagAnnotation>(HttpRequestMethod.Post, BuildApiRequestUri($"/annotations/{itemId}"), cancellationToken, parameters);
 
             return result;
         }
@@ -92,8 +86,7 @@ namespace wallabag.Api
             if (!string.IsNullOrEmpty(newAnnotation.Quote))
                 parameters.Add("quote", newAnnotation.Quote);
 
-            string jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Put, $"/annotations/{oldAnnotationId}", cancellationToken, parameters);
-            var result = await ParseJsonFromStringAsync<WallabagAnnotation>(jsonString, cancellationToken);
+            var result = await ExecuteHttpRequestAsync<WallabagAnnotation>(HttpRequestMethod.Put, BuildApiRequestUri($"/annotations/{oldAnnotationId}"), cancellationToken, parameters);
 
             return result;
         }
@@ -112,7 +105,7 @@ namespace wallabag.Api
         /// <param name="annotationId">The ID of the annotation.</param>
         /// <returns>True if successful, otherwise false.</returns>
         public async Task<bool> DeleteAnnotationAsync(int annotationId, CancellationToken cancellationToken = default(CancellationToken))
-            => !string.IsNullOrEmpty(await ExecuteHttpRequestAsync(HttpRequestMethod.Delete, $"/annotations/{annotationId}", cancellationToken));
+            => (await ExecuteHttpRequestAsync<object>(HttpRequestMethod.Delete, BuildApiRequestUri($"/annotations/{annotationId}"), cancellationToken)) != null;
 
         private void CheckValidityOfAnnotation(WallabagAnnotation annotation)
         {

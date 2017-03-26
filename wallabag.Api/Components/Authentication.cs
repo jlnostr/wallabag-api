@@ -1,20 +1,19 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Net.Http;
-using wallabag.Api.Responses;
 using System.Threading;
+using System.Threading.Tasks;
+using wallabag.Api.Responses;
 
 namespace wallabag.Api
 {
     public partial class WallabagClient
     {
+        private Uri _authenticationUri = new Uri("oauth/v2/token", UriKind.Relative);
+
         /// <summary>
         /// The Uri of the wallabag instance.
         /// </summary>
         public Uri InstanceUri { get; set; }
-        private Uri _AuthenticationUri { get { return new Uri($"{InstanceUri}oauth/v2/token"); } }
 
         /// <summary>
         /// The DateTime value that specifies the last execution method of <see cref="RefreshAccessTokenAsync"/>.
@@ -50,28 +49,27 @@ namespace wallabag.Api
         /// <returns>True, if login was successful, false otherwise.</returns>
         public async Task<bool> RequestTokenAsync(string username, string password, CancellationToken cancellationToken = default(CancellationToken))
         {
-            Dictionary<string, string> parameters = new Dictionary<string, string>();
-            parameters.Add("grant_type", "password");
-            parameters.Add("client_id", ClientId);
-            parameters.Add("client_secret", ClientSecret);
-            parameters.Add("username", username);
-            parameters.Add("password", password);
+            var parameters = new Dictionary<string, object>
+            {
+                { "grant_type", "password" },
+                { "client_id", ClientId },
+                { "client_secret", ClientSecret },
+                { "username", username },
+                { "password", password }
+            };
 
-            var content = new StringContent(JsonConvert.SerializeObject(parameters), System.Text.Encoding.UTF8, "application/json");
-            var response = await _httpClient.TryPostAsync(_AuthenticationUri, content, ThrowHttpExceptions, cancellationToken);
+            var result = await ExecuteHttpRequestAsync<AuthenticationResponse>(HttpRequestMethod.Post, _authenticationUri, cancellationToken, parameters, false);
 
-            if (!response.IsSuccessStatusCode)
-                return false;
+            if (result != null)
+            {
+                AccessToken = result.AccessToken;
+                RefreshToken = result.RefreshToken;
+                LastTokenRefreshDateTime = DateTime.UtcNow;
 
-            var responseString = await response.Content.ReadAsStringAsync();
+                return true;
+            }
 
-            var result = await ParseJsonFromStringAsync<AuthenticationResponse>(responseString, cancellationToken);
-            AccessToken = result.AccessToken;
-            RefreshToken = result.RefreshToken;
-
-            LastTokenRefreshDateTime = DateTime.UtcNow;
-
-            return true;
+            return false;
         }
 
         /// <summary>
@@ -80,7 +78,7 @@ namespace wallabag.Api
         /// <returns>A valid <seealso cref="AccessToken"/>.</returns>
         public async Task<string> GetAccessTokenAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
-            TimeSpan duration = DateTime.UtcNow.Subtract(LastTokenRefreshDateTime);
+            var duration = DateTime.UtcNow.Subtract(LastTokenRefreshDateTime);
             if (duration.TotalSeconds > 3600)
                 await RefreshAccessTokenAsync(cancellationToken);
 
@@ -96,27 +94,27 @@ namespace wallabag.Api
             if (string.IsNullOrEmpty(RefreshToken))
                 throw new ArgumentNullException("RefreshToken has no value. It will created once you've authenticated the first time.");
 
-            Dictionary<string, string> parameters = new Dictionary<string, string>();
-            parameters.Add("grant_type", "refresh_token");
-            parameters.Add("client_id", ClientId);
-            parameters.Add("client_secret", ClientSecret);
-            parameters.Add("refresh_token", RefreshToken);
+            var parameters = new Dictionary<string, object>
+            {
+                { "grant_type", "refresh_token" },
+                { "client_id", ClientId },
+                { "client_secret", ClientSecret },
+                { "refresh_token", RefreshToken }
+            };
 
-            var content = new StringContent(JsonConvert.SerializeObject(parameters), System.Text.Encoding.UTF8, "application/json");
-            var response = await _httpClient.TryPostAsync(_AuthenticationUri, content, ThrowHttpExceptions, cancellationToken);
+            var result = await ExecuteHttpRequestAsync<AuthenticationResponse>(HttpRequestMethod.Post, _authenticationUri, cancellationToken, parameters, false);
 
-            if (!response.IsSuccessStatusCode)
-                return false;
+            if (result != null)
+            {
+                AccessToken = result.AccessToken;
+                RefreshToken = result.RefreshToken;
+                LastTokenRefreshDateTime = DateTime.UtcNow;
 
-            var responseString = await response.Content.ReadAsStringAsync();
+                CredentialsRefreshed?.Invoke(this, null);
+                return true;
+            }
 
-            var result = await ParseJsonFromStringAsync<AuthenticationResponse>(responseString, cancellationToken);
-            AccessToken = result.AccessToken;
-            RefreshToken = result.RefreshToken;
-            LastTokenRefreshDateTime = DateTime.UtcNow;
-
-            CredentialsRefreshed?.Invoke(this, null);
-            return true;
+            return false;
         }
 
         /// <summary>
