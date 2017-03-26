@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using wallabag.Api.EventArgs;
 using wallabag.Api.Models;
 using wallabag.Api.Responses;
 using static wallabag.Api.WallabagClient;
@@ -368,7 +369,7 @@ namespace wallabag.Api
         /// <param name="annotationId">The ID of the annotation that should be deleted.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         Task<bool> DeleteAnnotationAsync(int annotationId, CancellationToken cancellationToken = default(CancellationToken));
-        
+
         /// <summary>
         /// Event that is fired if <see cref="RefreshAccessTokenAsync"/> was successful.
         /// </summary>
@@ -380,8 +381,8 @@ namespace wallabag.Api
         event EventHandler<PreRequestExecutionEventArgs> PreRequestExecution;
 
         /// <summary>
-        /// Event that is fired after the HTTP request is complete.
+        /// Event that is fired after the HTTP request is completed.
         /// </summary>
-        event EventHandler<HttpResponseMessage> AfterRequestExecution;
+        event EventHandler<AfterRequestExecutionEventArgs> AfterRequestExecution;
     }
 }

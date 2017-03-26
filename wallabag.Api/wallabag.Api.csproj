@@ -43,9 +43,11 @@
     <Compile Include="Components\Get.cs" />
     <Compile Include="Components\Modify.cs" />
     <Compile Include="Components\Tags.cs" />
+    <Compile Include="EventArgs\AfterRequestExecutionEventArgs.cs" />
     <Compile Include="IWallabagClient.cs" />
     <Compile Include="Models\WallabagItem.cs" />
     <Compile Include="Models\WallabagTag.cs" />
+    <Compile Include="EventArgs\PreRequestExecutionEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Responses\AuthenticationResponse.cs" />
     <Compile Include="Responses\ItemCollectionResponse.cs" />
