@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -83,16 +84,35 @@ namespace wallabag.Api
             return result;
         }
 
-        private async Task<string> ExecuteHttpRequestAsync(HttpRequestMethod httpRequestMethod, string relativeUriString, CancellationToken cancellationToken, Dictionary<string, object> parameters = default(Dictionary<string, object>), bool requiresAuthentication = true)
+        /// <summary>
+        /// Execute a HTTP request and deserialize it immediately.
+        /// </summary>
+        /// <typeparam name="T">The object you want to fetch and that is the type of the deserialization.</typeparam>
+        /// <param name="httpRequestMethod">The type of the http method.</param>
+        /// <param name="requestSubUri">The relative string that is attached to the <see cref="InstanceUri"/>.</param>
+        /// <param name="parameters">Parameters that should be submitted along with the request.</param>
+        /// <param name="requiresAuthentication">Indicating, if the default Authorization header should be attached to the request.</param>
+        /// <returns>If successful, the response as <typeparamref name="T"/>, otherwise the default value of <typeparamref name="T"/>.</returns>
+        private async Task<T> ExecuteHttpRequestAsync<T>(
+            HttpRequestMethod httpRequestMethod,
+            Uri requestSubUri,
+            CancellationToken cancellationToken,
+            Dictionary<string, object> parameters = default(Dictionary<string, object>),
+            bool requiresAuthentication = true)
         {
+            // Before executing the request check if the cancellation was requested
             cancellationToken.ThrowIfCancellationRequested();
 
-            var args = new PreRequestExecutionEventArgs();
-            args.RequestMethod = httpRequestMethod;
-            args.RequestUriSubString = relativeUriString;
-            args.Parameters = parameters;
+            // Execute the PreRequestExecution event
+            var args = new PreRequestExecutionEventArgs()
+            {
+                RequestMethod = httpRequestMethod,
+                RequestUriSubString = requestSubUri.ToString(),
+                Parameters = parameters
+            };
             PreRequestExecution?.Invoke(this, args);
 
+            // Add the Authorization header if required
             if (requiresAuthentication)
             {
                 if (string.IsNullOrEmpty(AccessToken))
@@ -102,24 +122,24 @@ namespace wallabag.Api
 
                 // The access token exists, but it's outdated and couldn't be updated due to several reasons.
                 if (!string.IsNullOrEmpty(AccessToken) && DateTime.UtcNow.Subtract(LastTokenRefreshDateTime).TotalSeconds > 3600)
-                    return null;
+                    return default(T);
             }
 
-            var uriString = $"{InstanceUri}api{relativeUriString}.json";
+            // Build the URI
+            string requestUriString = new Uri(InstanceUri, requestSubUri).ToString();
 
             if (httpRequestMethod == HttpRequestMethod.Get && parameters?.Count > 0)
             {
-                uriString += "?";
+                requestUriString += "?";
 
                 foreach (var item in parameters)
-                    uriString += $"{item.Key}={item.Value.ToString()}&";
+                    requestUriString += $"{item.Key}={item.Value.ToString()}&";
 
                 // Remove the last ampersand (&).
-                uriString = uriString.Remove(uriString.Length - 1);
+                requestUriString = requestUriString.Remove(requestUriString.Length - 1);
             }
 
-            Uri requestUri = new Uri(uriString);
-
+            var requestUri = new Uri(requestUriString);
 
             string httpMethodString = "GET";
             switch (httpRequestMethod)
@@ -143,24 +163,33 @@ namespace wallabag.Api
                 AfterRequestExecution?.Invoke(this, new AfterRequestExecutionEventArgs(args, response));
 
                 if (response.IsSuccessStatusCode)
-                    return await response.Content.ReadAsStringAsync();
+                    return await ParseJsonFromStreamAsync<T>(await response.Content.ReadAsStreamAsync(), cancellationToken);
                 else
-                    return null;
+                    return default(T);
             }
             catch (HttpRequestException)
             {
                 AfterRequestExecution?.Invoke(this, new AfterRequestExecutionEventArgs(args, response));
                 if (ThrowHttpExceptions) throw;
-                return null;
+                return default(T);
             }
         }
 
-        private Task<T> ParseJsonFromStringAsync<T>(string s, CancellationToken cancellationToken)
+        private Task<T> ParseJsonFromStreamAsync<T>(Stream s, CancellationToken cancellationToken)
         {
-            if (!string.IsNullOrEmpty(s))
-                return Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(s), cancellationToken);
-            else
-                return Task.FromResult(default(T));
+            return Task.Factory.StartNew(() =>
+            {
+                using (var st = s)
+                using (var sr = new StreamReader(st))
+                using (JsonReader reader = new JsonTextReader(sr))
+                {
+                    var serializer = new JsonSerializer();
+
+                    // read the json from a stream
+                    // json size doesn't matter because only a small piece is read at a time from the HTTP request
+                    return serializer.Deserialize<T>(reader);
+                }
+            }, cancellationToken);
         }
 
         /// <summary>
