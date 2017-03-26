@@ -85,6 +85,12 @@ namespace wallabag.Api
         }
 
         /// <summary>
+        /// Creates a valid relative Uri for <see cref="ExecuteHttpRequestAsync{T}(HttpRequestMethod, Uri, CancellationToken, Dictionary{string, object}, bool)"/>.
+        /// </summary>
+        /// <param name="s">The string.</param>
+        private Uri BuildApiRequestUri(string s) => new Uri($"api{s}.json", UriKind.Relative);
+
+        /// <summary>
         /// Execute a HTTP request and deserialize it immediately.
         /// </summary>
         /// <typeparam name="T">The object you want to fetch and that is the type of the deserialization.</typeparam>
