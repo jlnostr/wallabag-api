@@ -9,6 +9,14 @@ namespace wallabag.Api.Tests
     [TestClass]
     public class TagsTests : TestBaseClass
     {
+        public override async Task InitializeAsync()
+        {
+            var firstItem = (await Client.GetItemsAsync(itemsPerPage: 1)).First();
+            await Client.AddTagsAsync(firstItem, new string[] {
+                "tag1", "tag2", "tag3", "tag4", "tag5"
+            });
+        }
+
         [TestMethod]
         public async Task TagsAreRetrieved()
         {
