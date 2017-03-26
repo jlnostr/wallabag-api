@@ -15,10 +15,5 @@ namespace wallabag.Api
         /// Short version of <code>string.Join(",", list);</code>
         /// </summary>
         internal static string ToCommaSeparatedString<T>(this IEnumerable<T> list) => string.Join(",", list);
-
-        /// <summary>
-        /// Returns 0 if false, otherwise 1.
-        /// </summary>
-        internal static int ToInt(this bool input) => input ? 1 : 0;
     }
 }

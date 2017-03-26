@@ -37,6 +37,7 @@
     <DocumentationFile>bin\Release\wallabag.Api.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Common\JsonBoolConverter.cs" />
     <Compile Include="Components\Add.cs" />
     <Compile Include="Components\Annotations.cs" />
     <Compile Include="Components\Authentication.cs" />

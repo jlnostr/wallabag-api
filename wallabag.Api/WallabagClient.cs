@@ -66,10 +66,7 @@ namespace wallabag.Api
         /// The version number of the server as string. Empty if it fails.
         /// </returns>
         public async Task<string> GetVersionNumberAsync(CancellationToken cancellationToken = default(CancellationToken))
-        {
-            var jsonString = await ExecuteHttpRequestAsync(HttpRequestMethod.Get, "/version", cancellationToken, requiresAuthentication: false);
-            return await ParseJsonFromStringAsync<string>(jsonString, cancellationToken);
-        }
+            => await ExecuteHttpRequestAsync<string>(HttpRequestMethod.Get, BuildApiRequestUri("/version"), cancellationToken, requiresAuthentication: false);
 
         /// <summary>
         /// Returns the version number of the current wallabag instance as <see cref="Version"/>.
@@ -78,8 +75,7 @@ namespace wallabag.Api
         {
             string versionNumber = await GetVersionNumberAsync(cancellationToken);
 
-            Version result;
-            Version.TryParse(versionNumber, out result);
+            Version.TryParse(versionNumber, out var result);
 
             return result;
         }
@@ -139,7 +135,14 @@ namespace wallabag.Api
                 requestUriString += "?";
 
                 foreach (var item in parameters)
-                    requestUriString += $"{item.Key}={item.Value.ToString()}&";
+                {
+                    object value = item.Value;
+
+                    if (item.Value is bool)
+                        value = (bool)item.Value ? 1 : 0;
+
+                    requestUriString += $"{item.Key}={value}&";
+                }
 
                 // Remove the last ampersand (&).
                 requestUriString = requestUriString.Remove(requestUriString.Length - 1);
@@ -160,7 +163,7 @@ namespace wallabag.Api
             var request = new HttpRequestMessage(method, requestUri);
 
             if (parameters != null && httpRequestMethod != HttpRequestMethod.Get)
-                request.Content = new StringContent(JsonConvert.SerializeObject(parameters), System.Text.Encoding.UTF8, "application/json");
+                request.Content = new StringContent(JsonConvert.SerializeObject(parameters, new JsonConverter[] { new Common.JsonBoolConverter() }), System.Text.Encoding.UTF8, "application/json");
 
             HttpResponseMessage response = null;
             try
