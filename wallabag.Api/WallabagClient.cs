@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using wallabag.Api.EventArgs;
 
 namespace wallabag.Api
 {
@@ -135,10 +136,11 @@ namespace wallabag.Api
             if (parameters != null && httpRequestMethod != HttpRequestMethod.Get)
                 request.Content = new StringContent(JsonConvert.SerializeObject(parameters), System.Text.Encoding.UTF8, "application/json");
 
+            HttpResponseMessage response = null;
             try
             {
-                var response = await _httpClient.SendAsync(request, cancellationToken);
-                AfterRequestExecution?.Invoke(this, response);
+                response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken);
+                AfterRequestExecution?.Invoke(this, new AfterRequestExecutionEventArgs(args, response));
 
                 if (response.IsSuccessStatusCode)
                     return await response.Content.ReadAsStringAsync();
@@ -147,6 +149,7 @@ namespace wallabag.Api
             }
             catch (HttpRequestException)
             {
+                AfterRequestExecution?.Invoke(this, new AfterRequestExecutionEventArgs(args, response));
                 if (ThrowHttpExceptions) throw;
                 return null;
             }
@@ -173,28 +176,6 @@ namespace wallabag.Api
         /// <summary>
         /// Event that is fired after the HTTP request is complete.
         /// </summary>
-        public event EventHandler<HttpResponseMessage> AfterRequestExecution;
+        public event EventHandler<AfterRequestExecutionEventArgs> AfterRequestExecution;
     }
-
-    /// <summary>
-    /// The arguments of the <see cref="WallabagClient.PreRequestExecution" /> event.
-    /// </summary>
-    public class PreRequestExecutionEventArgs
-    {
-        /// <summary>
-        /// The substring that will attached to the <see cref="WallabagClient.InstanceUri"/> to perform a certain HTTP request.
-        /// </summary>
-        public string RequestUriSubString { get; set; }
-
-        /// <summary>
-        /// The type of the HTTP request.
-        /// </summary>
-        public WallabagClient.HttpRequestMethod RequestMethod { get; set; }
-
-        /// <summary>
-        /// Any parameters that are going to be submitted along with the request, e.g. the URL of a new item.
-        /// </summary>
-        public Dictionary<string, object> Parameters { get; set; }
-    }
-
 }

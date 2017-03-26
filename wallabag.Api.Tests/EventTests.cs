@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
+using wallabag.Api.EventArgs;
 
 namespace wallabag.Api.Tests
 {
@@ -51,9 +52,31 @@ namespace wallabag.Api.Tests
             Client.AfterRequestExecution -= Client_AfterRequestExecution;
         }
 
-        private void Client_AfterRequestExecution(object sender, System.Net.Http.HttpResponseMessage e)
+        private void Client_AfterRequestExecution(object sender, AfterRequestExecutionEventArgs e) => Assert.IsFalse(e.Response.IsSuccessStatusCode);
+
+        [TestMethod]
+        public async Task AfterRequestEventIsFiredIfHttpRequestFails()
         {
-            Assert.IsFalse(e.IsSuccessStatusCode);
+            int eventCounter = 0;
+            var oldUrl = Client.InstanceUri;
+            Client.InstanceUri = new System.Uri("http://127.0.0.1/");
+
+            void afterRequestExecution(object sender, AfterRequestExecutionEventArgs e)
+            {
+                Assert.IsNotNull(e);
+                Assert.IsNull(e.Response);
+                eventCounter++;
+            };
+
+            Client.AfterRequestExecution += afterRequestExecution;
+
+            await Client.DeleteAsync(123456789);
+
+            Client.AfterRequestExecution -= afterRequestExecution;
+
+            Assert.IsTrue(eventCounter > 0);
+
+            Client.InstanceUri = oldUrl;
         }
     }
 }
