@@ -71,9 +71,9 @@ namespace wallabag.Api
         /// <returns>
         /// The version number of the server as string. Empty if it fails.
         /// </returns>
-        public async Task<string> GetVersionNumberAsync(CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<string> GetVersionNumberAsync(bool forceRefresh = false, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (string.IsNullOrEmpty(_version))
+            if (string.IsNullOrEmpty(_version) || forceRefresh)
                 _version = await ExecuteHttpRequestAsync<string>(HttpRequestMethod.Get, BuildApiRequestUri("/version"), cancellationToken, requiresAuthentication: false);
 
             return _version;
@@ -82,9 +82,9 @@ namespace wallabag.Api
         /// <summary>
         /// Returns the version number of the current wallabag instance as <see cref="ApiVersion"/>.
         /// </summary>
-        public async Task<Version> GetVersionAsync(CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<Version> GetVersionAsync(bool forceRefresh = false, CancellationToken cancellationToken = default(CancellationToken))
         {
-            string versionNumber = await GetVersionNumberAsync(cancellationToken);
+            string versionNumber = await GetVersionNumberAsync(forceRefresh, cancellationToken);
 
             Version.TryParse(versionNumber, out var result);
 
