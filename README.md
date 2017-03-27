@@ -7,6 +7,8 @@ Install it using [NuGet](https://www.nuget.org/packages/wallabag.Api):
 Install-Package wallabag-api
 ```
 
+The changelog can be found [here](https://github.com/jlnostr/wallabag-api/wiki/Changelog).
+
 ## Usage Example:
 
 Get all favorites:
