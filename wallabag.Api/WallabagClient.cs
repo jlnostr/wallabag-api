@@ -120,7 +120,7 @@ namespace wallabag.Api
                 if (string.IsNullOrEmpty(AccessToken))
                     throw new Exception("Access token not available. Please create one using the RequestTokenAsync() method first.");
 
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", await GetAccessTokenAsync());
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", await GetAccessTokenAsync(cancellationToken));
 
                 // The access token exists, but it's outdated and couldn't be updated due to several reasons.
                 if (!string.IsNullOrEmpty(AccessToken) && DateTime.UtcNow.Subtract(LastTokenRefreshDateTime).TotalSeconds > 3600)
