@@ -23,6 +23,12 @@ namespace wallabag.Api
         /// </summary>
         public TimeSpan Timeout => _httpClient.Timeout;
 
+        private string _version;
+        /// <summary>
+        /// Returns the API version of the current instance.
+        /// </summary>
+        public string ApiVersion { get => _version; }
+
         /// <summary>
         /// Initializes a new instance of WallabagClient.
         /// </summary>
@@ -66,10 +72,15 @@ namespace wallabag.Api
         /// The version number of the server as string. Empty if it fails.
         /// </returns>
         public async Task<string> GetVersionNumberAsync(CancellationToken cancellationToken = default(CancellationToken))
-            => await ExecuteHttpRequestAsync<string>(HttpRequestMethod.Get, BuildApiRequestUri("/version"), cancellationToken, requiresAuthentication: false);
+        {
+            if (string.IsNullOrEmpty(_version))
+                _version = await ExecuteHttpRequestAsync<string>(HttpRequestMethod.Get, BuildApiRequestUri("/version"), cancellationToken, requiresAuthentication: false);
+
+            return _version;
+        }
 
         /// <summary>
-        /// Returns the version number of the current wallabag instance as <see cref="Version"/>.
+        /// Returns the version number of the current wallabag instance as <see cref="ApiVersion"/>.
         /// </summary>
         public async Task<Version> GetVersionAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
