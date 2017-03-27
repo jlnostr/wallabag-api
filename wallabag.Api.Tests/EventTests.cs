@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Threading.Tasks;
 using wallabag.Api.EventArgs;
 
@@ -77,6 +78,49 @@ namespace wallabag.Api.Tests
             Assert.IsTrue(eventCounter > 0);
 
             Client.InstanceUri = oldUrl;
+        }
+
+        [TestMethod]
+        public async Task PreRequestEventIsFiredForAuthenticationRequests()
+        {
+            bool fired = false;
+            string refreshToken = Client.RefreshToken;
+            Client.RefreshToken = "12345";
+            Client.LastTokenRefreshDateTime = Client.LastTokenRefreshDateTime.Subtract(TimeSpan.FromHours(2));
+
+            Client.PreRequestExecution += (s, e) =>
+            {
+                if (e.RequestUriSubString.Contains("oauth"))
+                    fired = true;
+            };
+
+            await Client.DeleteAsync(123456789);
+            Assert.IsTrue(fired);
+
+            Client.RefreshToken = refreshToken;
+        }
+
+        [TestMethod]
+        public async Task AfterRequestEventIsFiredForAuthenticationRequests()
+        {
+            bool fired = false;
+            string refreshToken = Client.RefreshToken;
+            Client.RefreshToken = "12345";
+            Client.LastTokenRefreshDateTime = Client.LastTokenRefreshDateTime.Subtract(TimeSpan.FromHours(2));
+
+            Client.AfterRequestExecution += (s, e) =>
+            {
+                if (!fired)
+                {
+                    StringAssert.Contains(e.RequestUriSubString, "oauth");
+                    fired = true;
+                }
+            };
+
+            await Client.DeleteAsync(123456789);
+            Assert.IsTrue(fired);
+
+            Client.RefreshToken = refreshToken;
         }
     }
 }
