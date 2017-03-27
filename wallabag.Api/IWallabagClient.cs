@@ -61,13 +61,13 @@ namespace wallabag.Api
         /// Returns the version number of the API as plain string.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
-        Task<string> GetVersionNumberAsync(CancellationToken cancellationToken = default(CancellationToken));
+        Task<string> GetVersionNumberAsync(bool forceRefresh = true, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Returns the version number of the API as instance of <see cref="Version"/>.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
-        Task<Version> GetVersionAsync(CancellationToken cancellationToken = default(CancellationToken));
+        Task<Version> GetVersionAsync(bool forceRefresh = true, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Returns the value of <see cref="AccessToken"/>. If it's outdated, the <see cref="RefreshAccessTokenAsync(CancellationToken)"/> method will be called automatically.

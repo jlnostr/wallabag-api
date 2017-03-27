@@ -12,6 +12,7 @@ namespace wallabag.Api
     public partial class WallabagClient : IWallabagClient
     {
         private HttpClient _httpClient;
+        private string _version;
 
         /// <summary>
         /// Gets or sets if exceptions should be thrown.
@@ -23,9 +24,10 @@ namespace wallabag.Api
         /// </summary>
         public TimeSpan Timeout => _httpClient.Timeout;
 
-        private string _version;
         /// <summary>
-        /// Returns the API version of the current instance.
+        /// Returns the API version of the current instance. 
+        /// Empty if not fetched yet via <see cref="GetVersionAsync(bool, CancellationToken)"/> or
+        /// <see cref="GetVersionNumberAsync(bool, CancellationToken)"/>.
         /// </summary>
         public string ApiVersion { get => _version; }
 
