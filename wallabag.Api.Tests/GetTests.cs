@@ -102,8 +102,9 @@ namespace wallabag.Api.Tests
         [TestMethod]
         public async Task AllPreviewImageUrisAreAbsolute()
         {
-            List<WallabagItem> items = (await Client.GetItemsAsync(itemsPerPage: 1000)).ToList();
+            var items = (await Client.GetItemsAsync(itemsPerPage: 100))?.ToList();
 
+            Assert.IsNotNull(items);
             CollectionAssert.AllItemsAreUnique(items);
             Assert.IsTrue(items.Count > 0);
 
