@@ -87,7 +87,7 @@ namespace wallabag.Api
 
             if (response != null)
                 foreach (var item in response.Items)
-                    ValidatePreviewImageUri(item);
+                    ValidateItemProperties(item);
 
             return response;
         }
@@ -100,11 +100,11 @@ namespace wallabag.Api
         public async Task<WallabagItem> GetItemAsync(int itemId, CancellationToken cancellationToken = default(CancellationToken))
         {
             var result = await ExecuteHttpRequestAsync<WallabagItem>(HttpRequestMethod.Get, BuildApiRequestUri($"/entries/{itemId}"), cancellationToken);
-            ValidatePreviewImageUri(result);
+            ValidateItemProperties(result);
             return result;
         }
 
-        private void ValidatePreviewImageUri(WallabagItem item)
+        private void ValidateItemProperties(WallabagItem item)
         {
             if (item?.PreviewImageUri?.IsAbsoluteUri == false)
             {
