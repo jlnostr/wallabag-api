@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using wallabag.Api.Models;
@@ -12,6 +13,8 @@ namespace wallabag.Api
     /// </summary>
     public partial class WallabagClient
     {
+        private Regex _languageCodeRegex = new Regex(@"^\w{2}(-\w{2})?");
+
         /// <summary>
         /// Returns a list of items filtered by given parameters.
         /// </summary>
@@ -130,6 +133,9 @@ namespace wallabag.Api
                 else
                     item.PreviewImageUri = null;
             }
+
+            if (!string.IsNullOrEmpty(item.Language) && !_languageCodeRegex.IsMatch(item.Language))
+                item.Language = null;
         }
 
         /// <summary>
