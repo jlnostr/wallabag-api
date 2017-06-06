@@ -15,22 +15,19 @@ namespace wallabag.Api
         /// <param name="tags">The tags that should be added to the item.</param>
         /// <param name="title">The title that should be given. Can be useful on certain cases, where items doesn't have a title, for example on PDF documents.</param>
         /// <returns></returns>
-        public async Task<WallabagItem> AddAsync(Uri uri, IEnumerable<string> tags = null, string title = null, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<WallabagItem> AddAsync(Uri uri, IEnumerable<string> tags = null, string title = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (string.IsNullOrEmpty(uri.ToString()))
+            if (string.IsNullOrEmpty(uri?.ToString()))
                 throw new ArgumentNullException(nameof(uri));
 
-            var parameters = new Dictionary<string, object>
-            {
-                { "url", uri }
-            };
+            var parameters = new Dictionary<string, object> { { "url", uri } };
 
             if (tags != null)
                 parameters.Add("tags", tags.ToCommaSeparatedString());
             if (title != null)
                 parameters.Add("title", title);
 
-            return await ExecuteHttpRequestAsync<WallabagItem>(HttpRequestMethod.Post, BuildApiRequestUri("/entries"), cancellationToken, parameters);
+            return ExecuteHttpRequestAsync<WallabagItem>(HttpRequestMethod.Post, BuildApiRequestUri("/entries"), cancellationToken, parameters);
         }
     }
 }

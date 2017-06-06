@@ -18,6 +18,14 @@ namespace wallabag.Api.Tests
         }
 
         [TestMethod]
+        public async Task AddArticleWithEmptyTagSucceeds()
+        {
+            var newItem = await Client.AddAsync(new Uri("http://www.zeit.de/thema/alternative-fuer-deutschland"), Array.Empty<string>());
+
+            Assert.IsNotNull(newItem);
+        }
+
+        [TestMethod]
         public async Task AddArticleWithSampleTag()
         {
             Dictionary<string, string> sampleItems = new Dictionary<string, string>()
@@ -28,7 +36,7 @@ namespace wallabag.Api.Tests
             };
 
             foreach (var item in sampleItems)
-            {             
+            {
                 var result = await Client.AddAsync(new Uri(item.Key), new string[] { item.Value });
                 Assert.IsNotNull(result);
                 StringAssert.Contains(result.Tags.ToCommaSeparatedString(), item.Value);
