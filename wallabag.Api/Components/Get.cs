@@ -84,7 +84,7 @@ namespace wallabag.Api
 
             if (response != null)
                 foreach (var item in response.Items)
-                    CheckUriOfItem(item);
+                    ValidatePreviewImageUri(item);
 
             return response;
         }
@@ -97,17 +97,38 @@ namespace wallabag.Api
         public async Task<WallabagItem> GetItemAsync(int itemId, CancellationToken cancellationToken = default(CancellationToken))
         {
             var result = await ExecuteHttpRequestAsync<WallabagItem>(HttpRequestMethod.Get, BuildApiRequestUri($"/entries/{itemId}"), cancellationToken);
-            CheckUriOfItem(result);
+            ValidatePreviewImageUri(result);
             return result;
         }
 
-        private void CheckUriOfItem(WallabagItem item)
+        private void ValidatePreviewImageUri(WallabagItem item)
         {
             if (item?.PreviewImageUri?.IsAbsoluteUri == false)
             {
                 var itemUri = new Uri(item.Url);
-                var itemHost = new Uri(itemUri.AbsoluteUri.Replace(itemUri.AbsolutePath, string.Empty));
-                item.PreviewImageUri = new Uri(itemHost, item.PreviewImageUri);
+
+                // First try: Create the Uri with the protocol from the url
+                // Useful for image uris like: //img.abcde.fgh/my_image.png
+                string uriWithProtocol = $"{itemUri.Scheme}:{item.PreviewImageUri.ToString()}";
+                if (Uri.IsWellFormedUriString(uriWithProtocol, UriKind.Absolute))
+                {
+                    item.PreviewImageUri = new Uri(uriWithProtocol);
+                    return;
+                }
+
+                // Second try: Append the uri to the hostname
+                string itemHost = string.Empty;
+                int pathAndQueryLength = itemUri.PathAndQuery.Length - 1;
+
+                if (pathAndQueryLength == 0)
+                    itemHost = itemUri.AbsoluteUri;
+                else
+                    itemHost = itemUri.AbsoluteUri.Remove(itemUri.AbsoluteUri.Length - pathAndQueryLength);
+
+                if (Uri.TryCreate(itemHost + item.PreviewImageUri, UriKind.Absolute, out var result))
+                    item.PreviewImageUri = result;
+                else
+                    item.PreviewImageUri = null;
             }
         }
 
