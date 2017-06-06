@@ -128,7 +128,8 @@ namespace wallabag.Api
                 else
                     itemHost = itemUri.AbsoluteUri.Remove(itemUri.AbsoluteUri.Length - pathAndQueryLength);
 
-                if (Uri.TryCreate(itemHost + item.PreviewImageUri, UriKind.Absolute, out var result))
+                Uri.TryCreate(itemHost + item.PreviewImageUri, UriKind.Absolute, out var result);
+                if (result.IsWellFormedOriginalString())
                     item.PreviewImageUri = result;
                 else
                     item.PreviewImageUri = null;
