@@ -37,7 +37,7 @@ namespace wallabag.Api.Models
         /// The quoted text of the annotation.
         /// </summary>
         [JsonProperty("quote")]
-        public string Quote { get; set; }
+        public string Quote { get; set; } = string.Empty;
 
         /// <summary>
         /// The creation date of the annotation.

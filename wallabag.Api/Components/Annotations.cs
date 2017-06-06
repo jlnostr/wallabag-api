@@ -47,11 +47,9 @@ namespace wallabag.Api
             var parameters = new Dictionary<string, object>
             {
                 { "ranges", annotation.Ranges },
-                { "text", annotation.Text }
+                { "text", annotation.Text },
+                { "quote", annotation.Quote }
             };
-
-            if (!string.IsNullOrEmpty(annotation.Quote))
-                parameters.Add("quote", annotation.Quote);
 
             var result = await ExecuteHttpRequestAsync<WallabagAnnotation>(HttpRequestMethod.Post, BuildApiRequestUri($"/annotations/{itemId}"), cancellationToken, parameters);
 
