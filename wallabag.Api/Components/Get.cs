@@ -135,7 +135,7 @@ namespace wallabag.Api
                     item.PreviewImageUri = null;
             }
 
-            if (!string.IsNullOrEmpty(item.Language) && !_languageCodeRegex.IsMatch(item.Language))
+            if (!string.IsNullOrEmpty(item?.Language) && !_languageCodeRegex.IsMatch(item?.Language))
                 item.Language = null;
         }
 
