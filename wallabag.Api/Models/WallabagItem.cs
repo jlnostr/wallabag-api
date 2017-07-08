@@ -90,6 +90,18 @@ namespace wallabag.Api.Models
         public IEnumerable<WallabagTag> Tags { get; set; }
 
         /// <summary>
+        /// Gets or sets the annotations of an item.
+        /// </summary>
+        [JsonProperty("annotations")]
+        public List<WallabagAnnotation> Annotations { get; set; }
+
+        /// <summary>
+        /// Returns the HTTP status code that was returned when the item was saved.
+        /// </summary>
+        [JsonProperty("http_status")]
+        public System.Net.HttpStatusCode? HttpStatusCode { get; }
+
+        /// <summary>
         /// Gets or sets the Uri of the preview image.
         /// </summary>
         [JsonProperty("preview_picture")]
