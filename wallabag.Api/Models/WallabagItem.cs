@@ -8,7 +8,7 @@ namespace wallabag.Api.Models
     /// <summary>
     /// Item containing all available data.
     /// </summary>
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     public class WallabagItem : IComparable
     {
         /// <summary>

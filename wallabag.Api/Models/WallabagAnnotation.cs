@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace wallabag.Api.Models
 {
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     internal class WallabagAnnotationRoot
     {
         [JsonProperty("total")]
@@ -18,7 +18,7 @@ namespace wallabag.Api.Models
     /// <summary>
     /// A class that represents an annotation.
     /// </summary>
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     public class WallabagAnnotation
     {
         /// <summary>
@@ -115,7 +115,7 @@ namespace wallabag.Api.Models
     /// <summary>
     /// A class that defines a range for an annotation.
     /// </summary>
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     public class WallabagAnnotationRange
     {
         /// <summary>

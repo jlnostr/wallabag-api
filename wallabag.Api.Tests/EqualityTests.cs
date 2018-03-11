@@ -12,7 +12,7 @@ namespace wallabag.Api.Tests
         {
             var item1 = new WallabagItem() { Id = 1337 };
             var item2 = new WallabagItem() { Id = 1337 };
-            
+
             Assert.IsNotNull(item1);
             Assert.IsNotNull(item2);
             Assert.AreEqual(item1, item2);
@@ -32,8 +32,9 @@ namespace wallabag.Api.Tests
         [TestMethod]
         public void ItemsWithSameIdAndSameModificationDateAreEqual()
         {
-            var item1 = new WallabagItem() { Id = 1337, LastUpdated = DateTime.Now };
-            var item2 = new WallabagItem() { Id = 1337, LastUpdated = DateTime.Now };
+            var dt = DateTime.Now;
+            var item1 = new WallabagItem() { Id = 1337, LastUpdated = dt };
+            var item2 = new WallabagItem() { Id = 1337, LastUpdated = dt };
 
             Assert.IsNotNull(item1);
             Assert.IsNotNull(item2);

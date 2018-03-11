@@ -7,7 +7,7 @@ namespace wallabag.Api.Models
     /// <summary>
     /// Represents a tag that can be applied to one or more items.
     /// </summary>
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     public class WallabagTag : IComparable
     {
         /// <summary>
