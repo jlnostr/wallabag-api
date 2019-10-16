@@ -107,6 +107,12 @@ namespace wallabag.Api.Models
         [JsonProperty("preview_picture")]
         public Uri PreviewImageUri { get; set; }
 
+        /// <summary>
+        /// Gets or sets the original article URL.
+        /// </summary>
+        [JsonProperty("origin_url")]
+        public string OriginalUrl { get; set; }
+
 
         public override string ToString() => Title ?? string.Empty;
         public override bool Equals(object obj)
