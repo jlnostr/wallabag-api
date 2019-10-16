@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.27428.2002
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "wallabag.Api", "wallabag.Api\wallabag.Api.csproj", "{6A2FC744-40A7-4558-A6FC-05324A292C2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wallabag.Api.Tests", "wallabag.Api.Tests\wallabag.Api.Tests.csproj", "{5E46C9CB-514A-4357-BEBB-297B65310E5C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
