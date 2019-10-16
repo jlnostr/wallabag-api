@@ -1,19 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.4;net45</TargetFrameworks>
+    <TargetFrameworks>netstandard1.1</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Authors>Julian Oster</Authors>
-    <PackageLicenseUrl>https://github.com/jlnostr/wallabag-api/blob/master/LICENSE.md</PackageLicenseUrl>
+    <Authors>Julian Oster and contributors</Authors>
+    <PackageLicense>https://github.com/jlnostr/wallabag-api/blob/master/LICENSE.md</PackageLicense>
     <PackageProjectUrl>https://github.com/jlnostr/wallabag-api/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/jlnostr/wallabag-api.git</RepositoryUrl>
     <Description>This package contains a library for consuming the wallabag API. wallabag itself is a free and open-source alternative to Pocket or Instapaper.</Description>
     <Version>1.5.0</Version>
     <AssemblyVersion>1.5.0.0</AssemblyVersion>
     <FileVersion>1.5.0.0</FileVersion>
-    <PackageReleaseNotes>- Upgrade from PCL to .NET Standard (1.4)</PackageReleaseNotes>
     <PackageTags>wallabag,pocket,API</PackageTags>
-    <Copyright>Julian Oster 2016-2018</Copyright>
+    <Copyright>Julian Oster and contributors 2016-2019</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
